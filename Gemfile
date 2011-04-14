@@ -43,7 +43,8 @@ gem 'i18n-js' #a plugin to use i18n resource in javascript codes
 gem 'edave-gdata4ruby', '0.2.0'
 gem 'oauth-plugin', :git => "git://github.com/afeld/oauth-plugin.git"
 gem 'portablecontacts', :git => "git://github.com/abhishiv/portablecontacts.git"
-
+#gem 'icalendar', '1.1.6'
+gem 'ri_cal'
 # for background service
 gem 'daemons', '>=1.1.0'
 
