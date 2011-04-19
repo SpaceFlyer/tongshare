@@ -1,5 +1,13 @@
 <div id="sidebar_ann" class="inside">
-  <div class="subtitle">最近更新：</div>
+  <% if @rec_instances && @rec_instances.size > 0 %>
+  <div class="subtitle">活动推荐：</div>
+  <ul>
+    <% for instance in @rec_instances %>
+    <li><%= link_to instance.name, event_path(instance.event, :inst => instance.id), :title => friendly_time_range(instance.begin, instance.end) %></li>
+    <% end %>
+  </ul>
+  <% end %>
+  <div class="subtitle">最新功能：</div>
   <ul>
     <li>
       <b>分享活动</b> 把你的活动分享给好朋友一起参加，寻找大家共同空余的时间并且即时掌握大家参加意愿的反馈～
