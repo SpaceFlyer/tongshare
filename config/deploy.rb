@@ -1,5 +1,5 @@
 set :application, "tongshare"
-set :repository,  "git://github.com/cbmixx/tongshare.git"
+set :repository,  "git://github.com/SpaceFlyer/tongshare.git"
 
 # If you aren't deploying to /u/apps/#{application} on the target
 # servers (which is the default), you can specify the actual location

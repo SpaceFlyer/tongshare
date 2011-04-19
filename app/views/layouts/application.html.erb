@@ -49,11 +49,14 @@
                 <% if user_signed_in? %>
                   <!--<li></li>-->
                   <li class="item">
-                  <a id="drop_btn" class="item_link">帐号</a>
+                  <a id="drop_btn" class="item_link">更多</a>
                   <ul id="drop_menu" class="vertical_menu">
-                    <li><%= link_to "个人资料", edit_user_registration_path%></li><li><%= link_to "注销登陆", destroy_user_session_path %></li></ul>
+                    <li><%= link_to "个人资料", edit_user_registration_path%></li>
+                    <li><%= link_to "注销登陆", destroy_user_session_path %></li>
+                    <li><%= link_to "意见反馈", "http://blog.tongshare.com/feedback", :target => "_blank"%></li>
+                  </ul>
                   </li>
-                  
+
                 <% end %>
               </ul>
               <ul class="hor_menu">
@@ -64,16 +67,14 @@
                   <li>
                     <%= link_to "新建活动", new_event_path%>
                   </li>
-                  <!--
                   <li>
-                    <%= link_to "个人资料", edit_user_registration_path%>
+                    <%= link_to "我的好友", '/friendship/show?type=bidirectional'%>
                   </li>
-                  -->
+                  <li>
+                    <%= link_to '我的群组', '/groups/' %>
+                  </li>
                   <li>
                     <%= link_to "看谁有空", url_for(:controller => "search"), :title => "查询Ta(们)可能的空余时间" %>
-                  </li>
-                  <li>
-                    <%= link_to '群组管理', '/groups/' %>
                   </li>
                   <%#*<li><a href="#">个人信息</a></li>%>
                   <%#*<li><a href="#">日历同步</a></li>%>
@@ -82,16 +83,13 @@
                     <%= link_to "同享日程", :root, :id => "index_logo" %>
                   </li>
                   <%  end %>
-                  <li>
-                    <%= link_to "意见反馈", "http://blog.tongshare.com/feedback", :target => "_blank"%>
-                  </li>
               </ul>
 
             </nav>
           </div>
-        <% if not user_signed_in? %>               
+        <% if not user_signed_in? %>
                 <div id="search_box_home">
-                  <form name="search_box" action="/search/box">                
+                  <form name="search_box" action="/search/box">
                     <input id="search_input" type="text" name="keyword" value="找某地点、组织的日程"
                     onclick="if(value==defaultValue)value=''" onblur="if(!value)value=defaultValue" onkeydown="if(value==defaultValue)value=''"></input>
                     <input id="search_button" class="link1 commit_button" type="submit" value="搜索" title='输入姓名查找用户；输入地点查找该地点的日程；输入公共用户查看其日程；输入共群群组名查看公共群组的日程'></input>
@@ -121,7 +119,7 @@
               </section>
               </td>
               <td id="aside_container" width="300px">
-                <% if user_signed_in? %>               
+                <% if user_signed_in? %>
                 <div id="search_box">
                   <form name="search_box" action="/search/box">
                     <input id="search_input" type="text" name="keyword" value="找人；找某地点、组织的日程"
