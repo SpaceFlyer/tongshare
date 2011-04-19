@@ -1,0 +1,7 @@
+<%= content_box "绑定", "手机号" do %>
+<form name="mobile" action="/sms/edit">
+  <label>手机号</label>
+  <input id="mobile_input" type="text" name="mobile"><%= current_user.user_extra.mobile || "" %></input>
+  <input type="submit" value="确定"/>
+</form>
+<% end %>

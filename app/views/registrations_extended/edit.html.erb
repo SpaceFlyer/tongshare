@@ -51,6 +51,12 @@
       </div>
 
       <div class="field">
+        <%= extra.label :phone, "*手机", :class => 'title'%>
+        <label><%= current_user.user_extra.mobile %></label>
+        <%#TODO next show confirmation status and change link%>
+      </div>
+
+      <div class="field">
         <label class="title">上传新头像</label>
         <%= extra.file_field :avatar %>
       </div>

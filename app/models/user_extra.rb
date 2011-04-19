@@ -1,4 +1,6 @@
 class UserExtra < ActiveRecord::Base
+  MOBILE_REGEX = /\A1[0-9]{10}\Z/
+
   has_attached_file :avatar, :styles => { :medium => "300x300", :thumb => "100x100"}
 
   include SiteConnectHelper
@@ -7,6 +9,7 @@ class UserExtra < ActiveRecord::Base
   belongs_to :user
 
   validates_format_of :renren_id, :with => /\A((id:[0-9]+)|(domain:.+))\Z/, :allow_nil => true, :allow_blank => true
+  validates_format_of :mobile, :with => MOBILE_REGEX, :allow_nil => true, :allow_blank => true
 
   def renren_url
     logger.debug errors.to_yaml
@@ -21,6 +24,10 @@ class UserExtra < ActiveRecord::Base
     ret = parse_renren_url(str)
     logger.debug "test: " + ret.to_yaml
     self.renren_id = ret.nil? ? str : ret #when illegal, write str to renren_id. That will raise validation error as expected.
+  end
+
+  def has_mobile?
+    self.mobile && !self.mobile.blank
   end
 
 end

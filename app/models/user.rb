@@ -45,6 +45,7 @@ class User < ActiveRecord::Base
   has_many :greeting_to, :class_name => 'Greeting', :foreign_key => 'from_user_id', :dependent => :destroy
   has_many :removed_event, :foreign_key => 'creator_id', :dependent => :destroy
   has_one :user_extra, :dependent => :destroy
+  has_one :sms_confirmation, :dependent => :destroy
   accepts_nested_attributes_for :user_extra
   
   has_one :admin_extra, :dependent => :destroy

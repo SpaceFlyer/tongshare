@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110415100242) do
+ActiveRecord::Schema.define(:version => 20110419082029) do
 
   create_table "acceptances", :force => true do |t|
     t.integer  "event_id"
@@ -198,6 +198,16 @@ ActiveRecord::Schema.define(:version => 20110415100242) do
 
   add_index "sharings", ["event_id"], :name => "index_sharings_on_event_id"
   add_index "sharings", ["shared_from"], :name => "index_sharings_on_shared_from"
+
+  create_table "sms_confirmations", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "token"
+    t.boolean  "confirmed"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "sms_confirmations", ["user_id"], :name => "index_sms_confirmations_on_user_id"
 
   create_table "user_extras", :force => true do |t|
     t.integer  "user_id"

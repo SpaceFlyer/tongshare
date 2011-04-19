@@ -1,5 +1,9 @@
 Tongshare::Application.routes.draw do
 
+  get "sms/edit"
+
+  get "sms/confirm"
+
   get "greeting/create"
   get "greeting/index"
 
