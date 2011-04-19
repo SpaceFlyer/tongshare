@@ -48,7 +48,8 @@ after "deploy:update_code", :link_and_bundle_install
 desc "install the necessary prerequisites"
 task :link_and_bundle_install, :roles => :app do
 #  run "cd #{release_path} && bundle install"
+#  ln -s /var/www/tongshare/shared/public/javascripts/translations.js #{release_path}/public/javascripts/translations.js && \
+
   run "ln -s /var/www/tongshare/shared/environments/production.rb #{release_path}/config/environments/production.rb && \
-    ln -s /var/www/tongshare/shared/public/javascripts/translations.js #{release_path}/public/javascripts/translations.js && \
     ln -s /var/www/tongshare/shared/data #{release_path}/data && cd #{release_path} && bundle install"
 end
