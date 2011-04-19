@@ -1,4 +1,7 @@
 <%= content_box @title, '' do%>
+<% if @friends.count == 0 %>
+您在同享上暂时还没有好友，请在活动中申请加Ta为好友并等待Ta通过
+<% end %>
 <div class="event attendee">
 <table>
   <% for user in @friends %>
