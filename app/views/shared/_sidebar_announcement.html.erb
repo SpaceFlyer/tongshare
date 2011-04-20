@@ -1,33 +1,33 @@
 <div id="sidebar_ann"> 
   <% if @rec_instances && @rec_instances.size > 0 %>
-    <div class="sideFrame">   
-    <p class="subtitle">活动推荐：</p>
-  <ul>
-    <% for instance in @rec_instances %>
-    <li><%= link_to instance.name, event_path(instance.event, :inst => instance.id), :title => friendly_time_range(instance.begin, instance.end) %></li>
-    <% end %>
-  </ul>
+    <div class="sideFrame">
+      <p class="subtitle">活动推荐：</p>
+      <ul>
+        <% for instance in @rec_instances %>
+          <li><%= link_to instance.name, event_path(instance.event, :inst => instance.id), :title => friendly_time_range(instance.begin, instance.end) %></li>
+        <% end %>
+      </ul>
+    </div>
   <% end %>
-</div>
   <div class="sideFrame">
-  <p class="subtitle">最新功能：</p>
-  <ul>
-    <li>
-      <b>分享活动</b> 分享活动给好朋友一起参加，寻找大家共同空余的时间，即时掌握大家参加意愿的反馈～
-    </li>
-    <li><b>添加好友</b> 你可以把参加同一个活动的同学添加为好友，方便以后分享活动</li>
-    <li><b>打招呼</b> 给参加同一活动的同学打个招呼</li>
-    <li><b><%= link_to '丰富个人信息', edit_user_registration_path %></b>，方便好友联系认识你</li>
-    <li><b><%= link_to '上传头像', '/users/edit' %></b> 同享日程将自动链接您的人人头像，您也可以自己上传新头像</li>
-    <li><b><%= link_to '看谁有空', :controller => "search"%></b> 想创建活动找朋友一起来参加，但是不知道Ta什么时间有空?</li>
-    
-    <li>
-      <b><%= link_to '邮箱提醒', edit_user_registration_path%></b> 又点名了？不用怕，一有情况立即自动邮件提醒！
-    </li>
-  <li>
-    <b><%= link_to "手动上传课表", {:controller => "curriculum", :action => "upload"}%></b> 课表依然导入失败？那就自己动手吧
-    </li>
-  </ul>
-  </p>
-</div>
+    <p class="subtitle">最新功能：</p>
+    <ul>
+      <li>
+        <b>分享活动</b> 分享活动给好朋友一起参加，寻找大家共同空余的时间，即时掌握大家参加意愿的反馈～
+      </li>
+      <li><b>添加好友</b> 你可以把参加同一个活动的同学添加为好友，方便以后分享活动</li>
+      <li><b>打招呼</b> 给参加同一活动的同学打个招呼</li>
+      <li><b><%= link_to '丰富个人信息', edit_user_registration_path %></b>，方便好友联系认识你</li>
+      <li><b><%= link_to '上传头像', '/users/edit' %></b> 同享日程将自动链接您的人人头像，您也可以自己上传新头像</li>
+      <li><b><%= link_to '看谁有空', :controller => "search"%></b> 想创建活动找朋友一起来参加，但是不知道Ta什么时间有空?</li>
+
+      <li>
+        <b><%= link_to '邮箱提醒', edit_user_registration_path%></b> 又点名了？不用怕，一有情况立即自动邮件提醒！
+      </li>
+      <li>
+        <b><%= link_to "手动上传课表", {:controller => "curriculum", :action => "upload"}%></b> 课表依然导入失败？那就自己动手吧
+      </li>
+    </ul>
+    </p>
+  </div>
 </div>
