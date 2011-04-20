@@ -118,6 +118,12 @@ class GroupsController < ApplicationController
         group = query_or_create_group_via_name_and_creator_id(params[:group_name], current_user.id)
       end
       authorize! :edit, group
+      if (params[:delete])
+        group.destroy
+        flash[:notice] = '操作成功'
+        redirect_to '/groups/'
+        return
+      end
       group_members = members.map do |member_id|
         {:user_id => member_id, :power => Membership::POWER_MEMBER}
       end
