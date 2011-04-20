@@ -1,5 +1,8 @@
 Tongshare::Application.routes.draw do
 
+  match "thankful" => "thankful#index"
+
+  match "about" => "about#index"
   get "greeting/create"
   get "greeting/index"
 
