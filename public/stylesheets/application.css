@@ -124,26 +124,38 @@ footer div {
 }
 
 #sidebar_ann {
+    margin-top: 10px;
     background-color: #ffffdd;
+}
+.sideFrame {
+  border: solid 1px #ffdd2a;
+  padding-bottom: 10px;
 }
 
 #sidebar_ann .subtitle {
-    margin-left: -15px;
-    margin-top: 5px;
-    margin-bottom: 5px;
+    padding-left: 10px;
+    padding-top: 3px;
+    padding-bottom: 2px;
     font-size: 15px;
     font-weight: bold;
+    background-color: #ffdd2a;
+}
+#sidebar_ann ul {
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: -5px;
 }
 
 #sidebar_ann li {
-    list-style-type: disc;
+    margin-left: 10px;
+    margin-right: 10px;
     margin-bottom: 5px;
 }
 
 #mobile_tip {
   margin-top: 0px;
   padding: 10px 30px 10px 30px;
-  background-color : #ffffdd;
+  background-color : #ffdd2a;
 }
 
 #profile_header .detail{
