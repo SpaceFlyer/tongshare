@@ -52,8 +52,8 @@
                   <a id="drop_btn" class="item_link">更多</a>
                   <ul id="drop_menu" class="vertical_menu">
                     <li><%= link_to "个人资料", edit_user_registration_path%></li>
-                    <li><%= link_to "注销登陆", destroy_user_session_path %></li>
                     <li><%= link_to "意见反馈", "http://blog.tongshare.com/feedback", :target => "_blank"%></li>
+                    <li><%= link_to "注销登陆", destroy_user_session_path %></li>
                   </ul>
                   </li>
 
@@ -152,6 +152,16 @@
         </div>
         <!-- footer -->
         <footer>
+          <div>
+            <p class="footer_logo">BRAVURA | 华彩 出品</p>
+            <p class="footer_links">
+              <a href="/about">关于</a>
+              | <a href="/thankful">鸣谢</a>
+              | <a href="http://blog.tongshare.com/feedback" target="_blank">官方博客</a>
+              | <a href="http://blog.tongshare.com/features" target="_blank">帮助中心</a>
+            </p>
+          </div>
+         <!-- 
           <div class="inside">
             BRAVURA | 华彩 出品<br/><br/>
             <div id="acknowledge">致谢：清华大学计算机系软件所、高性能所、ACM/ICPC实验室<br/>
@@ -163,6 +173,7 @@
             <br/>
             <a href="http://www.templatemonster.com" class="new_window">Website template</a> designed by TemplateMonster.com
           </div>
+          -->
         </footer>
       </div>
     </div>

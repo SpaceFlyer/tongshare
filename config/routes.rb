@@ -1,8 +1,10 @@
 Tongshare::Application.routes.draw do
 
   get "sms/edit"
-
   get "sms/confirm"
+
+  match "thankful" => "thankful#index"
+  match "about" => "about#index"
 
   get "greeting/create"
   get "greeting/index"
