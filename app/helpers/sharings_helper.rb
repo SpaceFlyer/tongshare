@@ -27,12 +27,12 @@ module SharingsHelper
     for elem in elements
       next if elem.empty?
       m = nil
-      if (m = elem.match(employee_no_pattern))
-        type = UserIdentifier::TYPE_EMPLOYEE_NO
-      elsif (m = elem.match(email_pattern))
+      if (m = elem.match(email_pattern))
         type = UserIdentifier::TYPE_EMAIL
       elsif (m = elem.match(mobile_pattern))
         type = UserIdentifier::TYPE_MOBILE
+      elsif (m = elem.match(employee_no_pattern))
+        type = UserIdentifier::TYPE_EMPLOYEE_NO
       else
         type = nil
       end
