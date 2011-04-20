@@ -101,6 +101,7 @@
         <div class="field">
           <label class="title">&nbsp;</label>
           <%= submit_tag( (current_user.public? ? "设置群组管理员" : "设置群组成员"), :id => "set_members_submit" )%>
+          <input id="delete_button" name="delete" type="submit" value="删除该群组"/>
         </div>
       <% end %>
     </fieldset>
