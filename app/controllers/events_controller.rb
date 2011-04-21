@@ -15,7 +15,7 @@ class EventsController < ApplicationController
     #Recommend 百年校庆活动 manually, this should be replaced automatically later
     #FIXME
     ue = UserExtra.find_by_name('百年校庆')
-    @rec_instances = query_next_accepted_instance_includes_event(Time.now, 3, ue.user_id, 0) if ue
+    @rec_instances = query_next_accepted_instance_includes_event(Time.now, 5, ue.user_id, 0) if ue
 
     user_extra = current_user.user_extra
     if (user_extra && !user_extra.hide_profile && user_extra.profile_status != User::PROFILE_CONFIRMED)
