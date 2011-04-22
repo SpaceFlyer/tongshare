@@ -95,7 +95,7 @@ class PublicController < ApplicationController
       format.html { render :text => result.to_json }
       format.json { render :json => result }
       if (params[:disable_escape] && params[:disable_escape] == 'true')
-        result = {:time_now => result[:time_now]} # Hack XML for Joey
+        result = {}# Hack XML for Joey
         format.xml do
           coder = coder = HTMLEntities.new
           xml_result = result.to_xml
@@ -103,7 +103,7 @@ class PublicController < ApplicationController
           render :text => xml_result
         end
       else
-        result = {:time_now => result[:time_now]} # Hack XML for Joey
+        result = {}# Hack XML for Joey
         format.xml { render :xml => result }
       end
     end
