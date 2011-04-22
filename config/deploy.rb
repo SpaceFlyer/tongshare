@@ -8,15 +8,15 @@ set :deploy_to, "/var/www/#{application}"
 
 # If you aren't using Subversion to manage your source code, specify
 # your SCM below:
-set :user, "deployer"
-set :runner, "deployer"
+set :user, "tongshare"
+set :runner, "tongshare"
 
 set :deploy_via, :remote_cache
 set :scm, 'git'
 set :branch, 'working'
 set :scm_verbose, true
 
-server "lives3.net", :app, :web, :db, :primary => true
+server "166.111.68.70", :app, :web, :db, :primary => true
 
 default_run_options[:pty] = true
 
