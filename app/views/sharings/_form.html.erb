@@ -4,178 +4,222 @@
   <%= javascript_include_tag "dhtmlx/dhtmlxcommon.js" %>
   <%= javascript_include_tag "dhtmlx/dhtmlxcombo.js" %>
   <%= javascript_include_tag "pinyin.js" %>
+  <%= javascript_include_tag "jquery.js" %>
+  <%= javascript_include_tag "jquery-ui.js" %>
 <% end %>
 
 <link rel="STYLESHEET" type="text/css" href="../stylesheets/dhtmlx/dhtmlxcombo.css"/>
 <script>
   window.dhx_globalImgPath="../images/dhtmlx/";
 </script>
+<script type="text/javascript">
+    jQ = $.noConflict();
+    jQ(document).ready(function() {
+        formActive('form1');
+        document.onkeypress = stopRKey;
+    });
+</script>
 
   <div class="sharing title"><%= @event.name %></div>
 
-<%= content_box "自动分享", "活动", true do %>
+<%= content_box "同享", "日程", true do %>
 
-  <%= form_tag url_for(:action => "add_members"), :remote => true, :onsubmit => 'confirmComboValue();' do %>
-      <fieldset>
-        <%= hidden_field_tag "event_id", @event.id %>
-        <div class="field">
-          <label for="friend_id" class="title">我的好友</label>
-          <select style='width:200px;'  id="friends_combo" name="friend_id" onChange="raw_string_onblur();">
-            <% for f_to in current_user.friendship_to.where('property=?', Friendship::BIDIRECTIONAL) %>
-              <option value="<%= f_to.to_user_id %>"><%= f_to.to_user.friendly_name %></option>
-            <% end %>
-          </select>
-          <script>
-            var friends_combo=dhtmlXComboFromSelect("friends_combo");
-            friends_combo.enableFilteringMode(true);
-            friends_combo.setComboText('')
-            friends_combo.unSelectOption()
-            friends_combo.attachEvent("onOpen", function(){friends_combo.setComboText('')})
-          </script>
-          <div class="field_help">您可以用Ta的名字拼音首字母来快速定位到Ta</div>
+      <fieldset id="form">
+        <%= form_tag url_for(:action => "add_members"), :remote => true, :onsubmit => 'confirmComboValue();' do %>
+
+        <div id="form1">
+            <%= hidden_field_tag "event_id", @event.id %>
+            <div class="field">
+                <label class="title">活动名称</label>
+                <input type="text" id="event_name" name="event_name" />
+            </div>
+            <div class="field">
+                <label class="title">开始于</label>
+                <input id="start_time" name="start_time" type="text" />
+                <label class="">结束于</label>
+                <input id="end_date" name="end_time" type="text" />
+            </div>
+            <div class="field">
+                <label class="title">地点</label>
+                <input id="location" name="location" type="text" />
+            </div>
+            <div class="field">
+                <label class="title">重复选项</label>
+                <input type="radio" name="duration_select" click="javascript:jQ('#duration').attr('value', 'non');"/> 不重复
+                <input type="radio" name="duration_select" click="javascript:jQ('#duration').attr('value', 'daily');" /> 每日重复
+                <input type="radio" name="duration_select" click="javascript:jQ('#duration').attr('value', 'weekly');" /> 每周重复
+                
+                <input type="hidden" name="duration" id="duration" value="non" />
+            </div>
+            <div class="field">
+                <label class="title">详细描述</label> 
+                <%= text_area_tag "detail", nil, :class=>"textfield_narrow" %>
+            </div>
+            <div class="field">
+                <label class="title">&nbsp;</label>
+                <a class="link1 commit_button" href="#" onclick="formActive('form2');">下一步</a>
+            </div>
         </div>
-        <div class="field">
-          <label for="friend_id" class="title">我的群组</label>
-          <select style='width:200px;'  id="groups_combo" name="group_id" onChange="raw_string_onblur();">
-            <% for group in current_user.group %>
-              <option value="<%= group.id %>"><%= group.name %></option>
-            <% end %>
-            <% for group in @managed_groups %>
-              <option value="<%= group.id %>"><%= group.name %></option>
-            <% end %>
-          </select>
-          <script>
-            var groups_combo=dhtmlXComboFromSelect("groups_combo");
-            groups_combo.enableFilteringMode(true);
-            groups_combo.setComboText('')
-            groups_combo.unSelectOption()
-            groups_combo.attachEvent("onOpen", function(){groups_combo.setComboText('')})
-          </script>
+
+        <div id="form3">
+            <div class="field">
+                <label for="friend_id" class="title">我的好友</label><br />
+                <ul>
+                    <% for f_to in current_user.friendship_to.where('property=?', Friendship::BIDIRECTIONAL) %>
+                        <li><%= f_to.to_user.friendly_name %> <a href="#" class="add_icon" onclick="add_friend_by_id('<%=f_to.to_user_id%>');" id="add_friend_<%= f_to.to_user_id %>">+</a></li>
+                    <% end %>
+                </ul>
+            </div>
+            <div class="field">
+                <a class="link1 commit_button" href="#" onclick="formActive('form2');">返回</a>
+            </div>
         </div>
-        <div class="field">
-          <label for="raw_string" class="title">学号或邮箱</label>
-          <%= text_area_tag "raw_string", nil, :class=>"textfield_narrow", :onkeyup=>"raw_string_onkeyup(typeof(e)=='undefined'?event:(e || event));", :onblur=>"raw_string_onblur();"%>
+
+        <div id="form4">
+            <div class="field">
+                <label class="title">我的群组</label><br />
+                <ul>
+                    <% for group in current_user.group %>
+                        <li><%= group.name %> <a href="#" class="add_icon" onclick="add_group_by_id('<%=group.id%>');" id="add_group_<%=group.id %>">+</a></li>
+                    <% end %>
+                    <% for group in @managed_groups %>
+                        <li><%= group.name %> <a href="#" class="add_icon" onclick="add_group_by_id('<%=group.id%>');" id="add_group_<%=group.id %>">+</a></li>
+                    <% end %>
+                </ul>
+            </div>
+            <div class="field">
+                <a class="link1 commit_button" href="#" onclick="formActive('form2');">返回</a>
+            </div>
         </div>
-        <div class="field">
-          <label class="title">&nbsp;</label>
-          <div class="field_help">粘贴或填写要查询的用户的学号或电子邮件地址，有多个时可以使用逗号、分号、空格、制表符或换行符分隔。</div>
+
+        <input type="hidden" id="friends_combo" name="friend_id" value="" />
+        <input type="hidden" id="groups_combo" name="group_id" value="" />
+        <div id="form5">
+            <div class="field">
+                粘贴或填写要查询的用户的学号或电子邮件地址，有多个时可以使用逗号、分号、空格、制表符或换行符分隔。
+                <br />
+                <br />
+                <%= text_area_tag "raw_string", nil, :class=>"textfield_narrow"%>
+                <br />
+                <%#= submit_button nil, "add_members_form", "添加"%>
+                <%= submit_tag "添加", :class => "link1 commit_button", :id => "add_members_submit" %>
+            </div>
+            <div class="field">
+                <br />
+                结果: <br />
+                <br />
+                <%= text_area_tag "result_string", nil, :class=>"textfield_narrow"%>
+            </div>
+            <div class="field">
+                <a class="link1 commit_button" href="#" onclick="formActive('form2');">返回</a>
+            </div>
         </div>
-        <div class="field">
-          <label class="title">&nbsp;</label>
-    <%#= submit_button nil, "add_members_form", "添加"%>
-          <%= submit_tag "添加", :id => "add_members_submit" %>
-        </div>
-      </fieldset>
     <% end %>
 
-  <%= form_for(@sharing, :html => {:onsubmit => 'return checkFormValid(this);'} ) do |f| %>
-    <fieldset>
-        <% if @sharing.errors.any? %>
-          <div id="error_explanation">
-            <h2><%= I18n.t 'activerecord.errors.template.header', :count => @sharing.errors.count %></h2>
+    <%= form_for(@sharing, :html => {:onsubmit => 'return checkFormValid(this);'} ) do |f| %>        
+        <div id="form2">
+            <div class="field">
+                通过下列方式邀请好友参加您的活动<br />
+            </div>
+            <div class="field">
+                <a class="link1 commit_button" href="#" onclick="formActive('form3');">我的好友</a>
+                <a class="link1 commit_button" href="#" onclick="formActive('form4');">我的群组</a>
+                <a class="link1 commit_button" href="#" onclick="formActive('form5');">通过学号或邮件</a>
+            </div>
 
-            <ul>
-              <% @sharing.errors.full_messages.each do |msg| %>
-                <li><%= msg %></li>
-              <% end %>
-            </ul>
-          </div>
+            <div class="field">
+                <label class="title">已邀请好友</label>
+                <div id="new_member_nil" class="field_div">（请使用上面的方法添加邀请对象）</div>
+                <div id="new_members_container" class="field_div">
+                    <ul id="new_members">
+                    </ul>
+                    <br/>
+                </div>
+                <div id="new_dummy_container" class="field_div" style="display:none">
+                    以下用户没有注册或者没有通过身份验证，他们将在注册或验证完成后收到您的活动分享：
+                    <ul id="new_dummy"></ul>
+                    <br/>
+                </div>
+                <div id="new_email_container" class="field_div" style="display:none">
+                    以下邮箱没有被绑定到已注册用户，但是同享日程仍会发送邀请邮件：
+                    <ul id="new_email"></ul>
+                    <br/>
+                </div>
+                <div id="public_groups_container" class="field_div" style="display:none">
+                    该活动将被加到以下公共群组的推荐列表中
+                    <ul id="public_groups"></ul>
+                    <br/>
+                </div>
+
+                <div id="errors_container">
+                    <div id="errors_invalid_container" class="field_div" style="display:none">
+                        以下用户没有注册且无法获取其学号或电子邮件，因此无法收到活动分享：
+                        <ul id="errors_invalid"></ul>
+                        <br/>
+                    </div>
+                    <div id="errors_duplicated_container" class="field_div" style="display:none">
+                        以下用户已经被分享过此活动，将不会再次发送分享：
+                        <ul id="errors_duplicated"></ul>
+                        <br/>
+                    </div>
+                    <div id="errors_parse_errored_container" class="field_div" style="display:none">
+                        以下字串将被忽略：
+                        <ul id="errors_parse_errored"></ul>
+                        <br/>
+                    </div>
+                </div>
+                <div id="setup_group" class="field_help" style="display:none">
+                    <%= link_to '将邀请对象设置为我的群组，方便下次再分享活动给Ta们', 'javascript: showGroupName();' %>
+                </div>
+            </div>
+
+            <div id="group_name" class="field" style="display:none">
+                <label for="group_name" class="title">群组名</label>
+                <%= text_field_tag "group_name"%>
+            </div>
+
+            <div class="field">
+                <label class="title">&nbsp;</label>
+                <a class="link1 commit_button" href="#" onclick="formActive('form1');">上一步</a>
+                <a class="link1 commit_button" href="#" onclick="formActive('form6');">下一步</a>
+            </div>
+        </div>
+
+        <div id="form6">
+            <h3>活动创建</h3>
+            <p>您可以将下面的文字直接通过短信、飞信等形式群发给受邀请者，同享日程将在他们接受该邀请后在共同参与者中显示他们的名字。
+            如果您还想进一步知道哪些人拒绝了该活动，哪些人没有回复邀请，请在“手动分享活动”邀请他们的同时，也通过“自动分享活动”来邀请他们。</p>
+            <%= link_to "展开/关闭邀请模板", "javascript: hide_or_show('invitation_message')" %>
+            <div id ="invitation_message" class="invitation_message">
+                <p><%= @current_user.friendly_name %>邀请你参加活动“<%= @event.name %>”
+                </p>
+
+                <p>
+                    时间：<%= @friendly_time_range %>
+
+                    <% if @event.recurring? %>
+                        <br/>重复：<%=  show_friendly_rrule(@event) %>
+                    <% end %>
+
+                    <%if !@event.location.blank?%>
+                        <br/>地点：<%= @event.location %>
+                    <%end%>
+
+                    <%if !@event.extra_info.blank? %>
+                        <br/><%=  @event.extra_info%>
+                    <%end%>
+                    <br/>[本信息由"同享日程"自动生成，它可以<%= rand_function_description %>]
+                </p>
+
+                <p>查看更多活动信息并对该邀请进行回复，请进入链接：<br/><%= "http://" + SITE + event_path(@event) + "?share_token=" + @event.get_or_create_share_token %></p>
+            </div>
+            <div class="field">
+                <label class="title">&nbsp;</label>
+                <%= f.submit :submit, :value => "完成", :class => 'link1 commit_button'%>
+            </div>
+        </div>
         <% end %>
+      </fieldset>
+</div>
 
-      <%= f.hidden_field :event_id%>
-        
-      <div class="field">
-        <label class="title">邀请对象</label>
-        <div id="new_member_nil" class="field_div">（请在上面的文本框中添加邀请对象，完成后单击“添加”按钮）</div>
-        <div id="new_members_container" class="field_div">
-          <ul id="new_members">
-          </ul>
-          <br/>
-        </div>
-        <div id="new_dummy_container" class="field_div" style="display:none">
-          以下用户没有注册或者没有通过身份验证，他们将在注册或验证完成后收到您的活动分享：
-          <ul id="new_dummy"></ul>
-           <br/>
-        </div>
-        <div id="new_email_container" class="field_div" style="display:none">
-          以下邮箱没有被绑定到已注册用户，但是同享日程仍会发送邀请邮件：
-          <ul id="new_email"></ul>
-           <br/>
-        </div>
-        <div id="public_groups_container" class="field_div" style="display:none">
-          该活动将被加到以下公共群组的推荐列表中
-          <ul id="public_groups"></ul>
-           <br/>
-        </div>
-
-        <div id="errors_container">
-          <div id="errors_invalid_container" class="field_div" style="display:none">
-            以下用户没有注册且无法获取其学号或电子邮件，因此无法收到活动分享：
-            <ul id="errors_invalid"></ul>
-             <br/>
-          </div>
-          <div id="errors_duplicated_container" class="field_div" style="display:none">
-            以下用户已经被分享过此活动，将不会再次发送分享：
-            <ul id="errors_duplicated"></ul>
-             <br/>
-          </div>
-          <div id="errors_parse_errored_container" class="field_div" style="display:none">
-            以下字串将被忽略：
-            <ul id="errors_parse_errored"></ul>
-             <br/>
-          </div>
-        </div>
-        <div id="setup_group" class="field_help" style="display:none">
-          <%= link_to '将邀请对象设置为我的群组，方便下次再分享活动给Ta们', 'javascript: showGroupName();' %>
-        </div>
-      </div>
-
-      <div id="group_name" class="field" style="display:none">
-        <label for="group_name" class="title">群组名</label>
-        <%= text_field_tag "group_name"%>
-      </div>
-      
-      <div class="field">
-        <%= f.label :extra_info, :class=>"title" %>
-        <%= f.text_area :extra_info, :class=>"textfield_narrow"%>
-      </div>
-
-      <div class="field">
-        <label class="title">&nbsp;</label>
-        <%= f.submit :submit, :value => "提交", :class => 'link1 commit_button'%>
-        <%#TODO: check if the user clicked "添加" %>
-        <%= styled_button "取消", :back %>
-      </div>
-      <% end %>
-    </fieldset>
-<% end %>
-
-  <br/>
-<%= content_box "手动分享", "活动", true do %>
-    <p>您可以将下面的文字直接通过短信、飞信等形式群发给受邀请者，同享日程将在他们接受该邀请后在共同参与者中显示他们的名字。
-    如果您还想进一步知道哪些人拒绝了该活动，哪些人没有回复邀请，请在“手动分享活动”邀请他们的同时，也通过“自动分享活动”来邀请他们。</p>
-    <%= link_to "展开/关闭邀请模板", "javascript: hide_or_show('invitation_message')" %>
-    <div id ="invitation_message" class="invitation_message">
-      <p><%= @current_user.friendly_name %>邀请你参加活动“<%= @event.name %>”
-      </p>
-
-      <p>
-      时间：<%= @friendly_time_range %>
-
-      <% if @event.recurring? %>
-      <br/>重复：<%=  show_friendly_rrule(@event) %>
-      <% end %>
-
-      <%if !@event.location.blank?%>
-      <br/>地点：<%= @event.location %>
-      <%end%>
-
-      <%if !@event.extra_info.blank? %>
-      <br/><%=  @event.extra_info%>
-      <%end%>
-      <br/>[本信息由"同享日程"自动生成，它可以<%= rand_function_description %>]
-      </p>
-
-      <p>查看更多活动信息并对该邀请进行回复，请进入链接：<br/><%= "http://" + SITE + event_path(@event) + "?share_token=" + @event.get_or_create_share_token %></p>
-    </div>
 <% end %>

@@ -1,3 +1,20 @@
+function formActive(id) {
+    for (var i=1; i<=6; i++)
+        jQ("#form"+i).hide();
+    $('result_string').setValue('');
+    jQ("#"+id).show();
+}
+
+function add_friend_by_id(id) {
+    jQ("#friends_combo").attr("value", id);
+    $('add_members_submit').click();
+}
+
+function add_group_by_id(id) {
+    jQ("#groups_combo").attr("value", id);
+    $('add_members_submit').click();
+}
+
 function add_members(data)
 {
     /*if(data.empty)
@@ -7,7 +24,9 @@ function add_members(data)
 
     clear_errors();
 
+    
     list = $('new_members');
+    var raw_string_result = '';
     for(var i = 0; i < data.valid.size(); i++)
     {       
         var_item = data.valid[i];
@@ -15,6 +34,11 @@ function add_members(data)
         if($('new_member_' + var_item.id) != null)
         {
             $('new_member_' + var_item.id).remove();
+        } else {
+            raw_string_result = raw_string_result + var_item.name + "; ";
+        }
+        if ($('add_friend_'+var_item.id).hide()) {
+            $('add_friend_'+var_item.id).hide();
         }
 
         li = new Element("li", {
@@ -57,6 +81,9 @@ function add_members(data)
 
         list.insert(li);
     }
+    
+    if ($('result_string') != null)
+        $('result_string').setValue(raw_string_result);
 
     if(data.dummy != null && data.dummy.size() > 0)
     {
@@ -164,6 +191,7 @@ function clear_errors()
 
 function del_member(id)
 {
+    jQ(".add_icon").show();
     var_item = $('new_member_' + id);
     var_item.remove();
     toggle_nil_prompt();
@@ -281,4 +309,10 @@ function confirmComboValue()
 function showGroupName()
 {
     $('group_name').show();
+}
+
+function stopRKey(evt) {
+    var evt = (evt) ? evt : ((event) ? event : null);
+    var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+    if ((evt.keyCode == 13) && (node.type=="text"))  {return false;}
 }
