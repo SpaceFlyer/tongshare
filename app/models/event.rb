@@ -1,16 +1,13 @@
-require 'gcal4ruby'
-
 class Event < ActiveRecord::Base
+  include RruleHelper
+  RRULE_END_BY_NEVER = 0  #won't store into database, currently not supported
+  RRULE_END_BY_COUNT = 1  #won't store into database
+  RRULE_END_BY_DATE = 2   #won't store into
 
   MAX_INSTANCE_COUNT = 64
   SECONDS_OF_A_DAY = 24 * 60 * 60
 
-  RRULE_END_BY_NEVER = 0  #won't store into database, currently not supported
-  RRULE_END_BY_COUNT = 1  #won't store into database
-  RRULE_END_BY_DATE = 2   #won't store into database
-
   PUBLIC_TOKEN = "public"
-
   
   # In order to make Event.new(:creator_id => creator_id) work, attr_accessible :creator_id
   # seems to be necessary!
@@ -28,7 +25,7 @@ class Event < ActiveRecord::Base
   #TODO validates
   validates :name, :begin, :creator_id, :presence => true
   validates_numericality_of :rrule_count, :allow_nil => true, :only_integer => true, :greater_than_or_equal_to => 1, :less_than_or_equal_to => MAX_INSTANCE_COUNT
-  validates_inclusion_of :rrule_frequency, :in => GCal4Ruby::Recurrence::DUMMY_FREQS
+  validates_inclusion_of :rrule_frequency, :in => Recurrence::FREQUENCIES
 
   before_destroy :set_removed_event
 
@@ -45,7 +42,7 @@ class Event < ActiveRecord::Base
     self.share_token = PUBLIC_TOKEN if self.creator.public? # Public user's events are public
 
     #check rrule_days
-    if self.rrule_frequency == GCal4Ruby::Recurrence::WEEKLY_FREQUENCE
+    if self.rrule_frequency == Recurrence::WEEKLY_FREQUENCY
       if self.rrule_days.empty?
         self.rrule_days = [Date.today.wday]
       end
@@ -71,7 +68,7 @@ class Event < ActiveRecord::Base
     logger.debug "count: " + self.recurrence.count.to_yaml
     ##
 
-    self.rrule = self.recurrence.rrule
+    self.rrule = self.recurrence.to_s
     logger.debug self.rrule.to_yaml
 
     return false if !valid?
@@ -93,23 +90,9 @@ class Event < ActiveRecord::Base
     end
 
     logger.debug errors.to_yaml
-    return false if !ret
-    #TODO edit each for better performance?
-    return true
+    ret
   end
 
-#  def update_attributes(vars = {})
-#    #"super" will call "save", so no more for rrule
-#
-#    ret = super
-#    return false if !ret
-#    #TODO edit each for better performance?
-#    #drop_instance
-#    #generate_instance
-#    #modified by Wander: do not do these two operations because update_attributes calls "save"
-#  end
-
-  #TODO untested
   def add_sharing(current_user_id, extra_info, user_ids, user_priority = UserSharing::PRIORITY_INVITE, groups = [])
     # I think this won't work since sharing has no attr_accessor!
     s = self.sharings.new(:shared_from => current_user_id, :extra_info => extra_info)
@@ -168,52 +151,45 @@ class Event < ActiveRecord::Base
   #TODO: validates
   def recurrence
     if !defined? @recurrence
-      @recurrence = GCal4Ruby::Recurrence.new
-      @recurrence.from_rrule(self.rrule) unless self.rrule.blank?
+      @recurrence = Recurrence.new
+      @recurrence.load(self.rrule) unless self.rrule.blank?
     end
 
     @recurrence
   end
 
   def rrule_frequency
-    ret = self.recurrence.frequency
-    ret ||= GCal4Ruby::Recurrence::NONE_FREQUENCY
-    ret
+    self.recurrence.frequency
   end
 
   def rrule_frequency=(f)
-    # will be checked in GCal4Ruby::Recurrence::frequency=
     self.recurrence.frequency = f
   end
 
   def rrule_interval
-    self.recurrence.interval || 1
+    self.recurrence.interval
   end
 
   def rrule_interval=(i)
-    self.recurrence.interval = i.to_i
+    self.recurrence.interval = i
   end
 
   def rrule_days
-    ret = self.recurrence.get_days
+    ret = self.recurrence.day
     ret = [Date.today.wday] if ret.empty?
     ret
   end
 
   def rrule_days=(days)
-    ret = []
-    days.each do |d|
-      ret << d.to_i unless d.blank?
-    end
-    self.recurrence.set_days(ret)
+    self.recurrence.day = days
   end
 
   def rrule_count
-    self.recurrence.count || 1
+    self.recurrence.count
   end
 
   def rrule_count=(count)
-    self.recurrence.count = count.to_i
+    self.recurrence.count = count
   end
 
   def rrule_repeat_until
@@ -226,7 +202,6 @@ class Event < ActiveRecord::Base
     rescue ArgumentError => e
       date = nil
     end
-    
     self.recurrence.repeat_until=date
   end
 
@@ -281,7 +256,7 @@ class Event < ActiveRecord::Base
   end
   
   def generate_instance
-    if self.rrule_frequency == GCal4Ruby::Recurrence::NONE_FREQUENCY
+    if self.rrule_frequency == Recurrence::NONE_FREQUENCY
       i = self.instances.build(
         :override => nil,
         :name => self.name,
@@ -293,13 +268,9 @@ class Event < ActiveRecord::Base
         )
       #i.save
     else
-      #rec = GCal4Ruby::Recurrence.new
-      #rec.from_rrule(self.rrule) # rec.load('RRULE:' + self.rrule) will encounter bug since self.rrule may begin with 'RRULE:'      
-      #modified by Wander
-      rec = self.recurrence
       interval = self.rrule_interval
       count = 0
-      if rec.frequency == 'DAILY'
+      if self.rrule_frequency == Recurrence::DAILY_FREQUENCY
         while 1
           self.instances.build(
             :name => self.name,
@@ -312,8 +283,8 @@ class Event < ActiveRecord::Base
             :creator_id => self.creator_id
           )
           count += 1
-          break if !rec.count.nil? and count >= rec.count
-          break if !rec.repeat_until.nil? and self.begin + count * interval * SECONDS_OF_A_DAY > rec.repeat_until
+          break if !self.recurrence.count.nil? and count >= self.rrule_count
+          break if !self.recurrence.repeat_until.nil? and self.begin + count * interval * SECONDS_OF_A_DAY > self.rrule_repeat_until
           #return false if count > MAX_INSTANCE_COUNT
           #modified by Wander
           if count > MAX_INSTANCE_COUNT
@@ -322,12 +293,11 @@ class Event < ActiveRecord::Base
           end
         end
         
-      elsif rec.frequency == 'WEEKLY'
+      elsif self.rrule_frequency == Recurrence::WEEKLY_FREQUENCY
         now = self.begin
-        interval = 0
-        interval = rec.interval - 1 if rec.interval > 1
+        interval = self.rrule_interval - 1
         while 1
-          if rec.day[now.wday]
+          if self.recurrence.day.include?(now.wday)
             #
             self.instances.build(
               :name => self.name, 
@@ -342,8 +312,8 @@ class Event < ActiveRecord::Base
             #i.save
             count += 1
           end         
-          break if !rec.count.nil? and count >= rec.count
-          break if !rec.repeat_until.nil? and now > rec.repeat_until
+          break if !self.recurrence.count.nil? and count >= self.rrule_count
+          break if !self.recurrence.repeat_until.nil? and now > self.rrule_repeat_until
 
           #return false if count > MAX_INSTANCE_COUNT
           #modified by Wander
@@ -356,15 +326,9 @@ class Event < ActiveRecord::Base
           if now.wday == 0 # now.sunday? is too new for ruby1.8.7
             now += interval * 7 * SECONDS_OF_A_DAY
           end
-
-        end
-        
-      elsif rec.frequency == 'MONTHLY'
-        #TODO
-      elsif rec.frequency == 'YEARLY'
-        #TODO
+        end        
       else
-        logger.debug "#{__method__}:unknown frequency: #{rec.frequency}"
+        logger.debug "#{__method__}:unknown frequency: #{self.rrule_frequency}"
       end
       logger.debug "#{__method__}:instance generated:" + self.instances.size.to_s
     end
