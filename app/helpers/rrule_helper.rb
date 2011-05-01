@@ -1,28 +1,29 @@
 require 'date'
-module RruleHelper
-  class Time
-    #Returns a ISO 8601 complete formatted string of the time
-    def complete
-      self.utc.strftime("%Y%m%dT%H%M%SZ")
-    end
+require 'time'
+class Time
+  #Returns a ISO 8601 complete formatted string of the time
+  def complete
+    self.utc.strftime("%Y%m%dT%H%M%SZ")
+  end
 
-    def self.parse_complete(value)
+  def self.parse_complete(value)
 
-      #Time.xmlschema(value)
-      d, h = value.split("T")
-      if (h == nil)
-        return Time.parse(d)
+    #Time.xmlschema(value)
+    d, h = value.split("T")
+    if (h == nil)
+      return Time.parse(d)
+    else
+      if h["Z"]
+        #FIXME timezone!
+        return Time.parse(d+" "+h.gsub("Z","")) + Time.now.utc_offset
       else
-        if h["Z"]
-          #FIXME timezone!
-          return Time.parse(d+" "+h.gsub("Z","")) + Time.now.utc_offset
-        else
-          return Time.parse(value)
-        end
+        return Time.parse(value)
       end
     end
   end
-  
+end
+
+module RruleHelper
   class Recurrence
     NONE_FREQUENCY = "NONE"   #add this to represent "no repeat", won't store actually
     DAILY_FREQUENCY = "DAILY"
@@ -53,37 +54,52 @@ module RruleHelper
     end
     
     def count=(c)
+      remove_instance_variable(:@count) if c.nil? && instance_variable_defined?(:@count)
       c = c.to_i
       if c > 0
         @count = c
-        remove_instance_variable(:@repeat_until) if instance_variable_defined?(:@repeat_until)
+        #remove_instance_variable(:@repeat_until) if instance_variable_defined?(:@repeat_until)
       end
     end
 
     def repeat_until=(r)
+      remove_instance_variable(:@repeat_until) if r.nil? && instance_variable_defined?(:@repeat_until)
       if r.is_a?(Date)
         @repeat_until = r.to_time.localtime + (24 * 60 * 60 - 1) #1s before the next day
       elsif r.is_a?(Time)
         @repeat_until = r
       end
-      if !@repeat_until.nil?
-        remove_instance_variable(:@count) if instance_variable_defined?(:@count)
-      end      
+      # if !@repeat_until.nil?
+      #   remove_instance_variable(:@count) if instance_variable_defined?(:@count)
+      # end
     end
 
     def day
+      @day
+    end
+    
+    def day=(d)
+      @day = d
+    end
+
+    def set_days(days)
+      @day = Array.new(7, false)
+      for d in days
+        @day[d.to_i % 7] = true unless d.blank?
+      end
+    end
+
+    def set_day(day)
+      @day = Array.new(7, false)
+      @day[day % 7] = true
+    end
+
+    def get_days
       ret = []
       for d in 0..6
         ret << d if @day[d]
       end
       ret
-    end
-    
-    def day=(days)
-      @day = Array.new(7, false)
-      for d in days
-        @day[d.to_i % 7] = true unless d.blank?
-      end
     end
 
     def to_s

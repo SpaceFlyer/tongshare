@@ -49,7 +49,7 @@ class Event < ActiveRecord::Base
     else
       self.rrule_days = []
     end
-
+    
     #check repeat_end_condition
     if self.rrule_end_condition == RRULE_END_BY_NEVER || self.rrule_end_condition == RRULE_END_BY_COUNT
       self.recurrence.repeat_until = nil
@@ -60,7 +60,7 @@ class Event < ActiveRecord::Base
       self.recurrence.count = nil
       logger.debug "set count to nil"
     end
-    
+
     #generate rrule
     logger.debug self.recurrence.to_yaml
     logger.debug "end cond: " + self.rrule_end_condition.to_yaml
@@ -158,6 +158,18 @@ class Event < ActiveRecord::Base
     @recurrence
   end
 
+  def rrule
+    @rrule
+  end
+  
+  def rrule=(r)
+    @rrule = r
+    if defined? @recurrence
+      @recurrence = Recurrence.new
+      @recurrence.load(@rrule) unless self.rrule.blank?
+    end
+  end
+  
   def rrule_frequency
     self.recurrence.frequency
   end
@@ -175,13 +187,13 @@ class Event < ActiveRecord::Base
   end
 
   def rrule_days
-    ret = self.recurrence.day
+    ret = self.recurrence.get_days
     ret = [Date.today.wday] if ret.empty?
     ret
   end
 
   def rrule_days=(days)
-    self.recurrence.day = days
+    self.recurrence.set_days(days)
   end
 
   def rrule_count
@@ -297,7 +309,7 @@ class Event < ActiveRecord::Base
         now = self.begin
         interval = self.rrule_interval - 1
         while 1
-          if self.recurrence.day.include?(now.wday)
+          if self.recurrence.day[now.wday]
             #
             self.instances.build(
               :name => self.name, 

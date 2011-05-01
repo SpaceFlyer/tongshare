@@ -1,6 +1,6 @@
 module EventsHelper
   require 'thucourse'
-  require 'gcal4ruby/recurrence'
+  #require 'gcal4ruby/recurrence'
   require 'time'
   require 'pp'
   require 'ftools'
@@ -54,7 +54,7 @@ module EventsHelper
         return false unless e.save
       end
       acc = Acceptance.new(:event_id => e.id, :user_id => user_id, :decision => Acceptance::DECISION_ACCEPTED)
-      logger.error acc.errors.to_yaml unless acc.save
+      #logger.error acc.errors.to_yaml unless acc.save
     end
 
     return true
@@ -74,8 +74,8 @@ module EventsHelper
     end
     event.begin = Time.parse(FIRST_DAY_IN_SEMESTER + " " + begin_time_string) + week_day.days
     event.end = Time.parse(FIRST_DAY_IN_SEMESTER + " " + end_time_string) + week_day.days
-    rrule = GCal4Ruby::Recurrence.new
-    rrule.frequency = GCal4Ruby::Recurrence::WEEKLY_FREQUENCE
+    rrule = RruleHelper::Recurrence.new
+    rrule.frequency = RruleHelper::Recurrence::WEEKLY_FREQUENCY
     rrule.set_day(week_day)
     rrule.count = 16
     if (course_class.week_modifier)
@@ -104,7 +104,7 @@ module EventsHelper
         end
       end
     end
-    event.rrule = rrule.rrule
+    event.rrule = rrule.to_s
     return event
   end
 
@@ -336,9 +336,7 @@ module EventsHelper
 
   #for views
   def frequency_radio_buttons(form)
-    frequences = [GCal4Ruby::Recurrence::NONE_FREQUENCY]
-    frequences.concat GCal4Ruby::Recurrence::FREQUENCES
-
+    frequences = RruleHelper::Recurrence::FREQUENCIES
     result = ""
     frequences.each do |freq|
       result += form.radio_button :rrule_frequency, freq,
@@ -439,28 +437,25 @@ module EventsHelper
   end
 
   def show_friendly_rrule(event) #TODO i18n
-    rrule = event.rrule
-    return "" if rrule.nil? || rrule == ""
-    rec = GCal4Ruby::Recurrence.new
-    rec.from_rrule(rrule)
-    if (rec.frequency == GCal4Ruby::Recurrence::WEEKLY_FREQUENCE)
-      interval_string = rec.interval.to_s
+    return '' if event.rrule_frequency == RruleHelper::Recurrence::NONE_FREQUENCY
+    if (event.rrule_frequency == RruleHelper::Recurrence::WEEKLY_FREQUENCY)
+      interval_string = event.rrule_interval.to_s
       interval_string = "" if (interval_string == "1")
       days = []
-      for i in 0...7
-        days << (I18n.t 'date.abbr_day_names')[i] if rec.day[i]
+      for d in event.recurrence.get_days
+        days << (I18n.t 'date.abbr_day_names')[d]
       end
       day_string = days.join("、")
       result = sprintf("每%s周的周%s", interval_string, day_string)
-      result << sprintf("，至%s", I18n.l(rec.repeat_until.to_date)) if rec.repeat_until
-      result << sprintf("，共%d次", rec.count) if rec.count
+      result << sprintf("，至%s", I18n.l(event.rrule_repeat_until.to_date)) if event.rrule_repeat_until
+      result << sprintf("，共%d次", event.rrule_count) if event.rrule_count
       return result
     else
-      interval_string = rec.interval.to_s
+      interval_string = event.rrule_interval.to_s
       interval_string = "" if (interval_string == "1")
       result = sprintf("每%s天", interval_string)
-      result << sprintf("，至%s", I18n.l(rec.repeat_until.to_date)) if rec.repeat_until
-      result << sprintf("，共%d次", rec.count) if rec.count
+      result << sprintf("，至%s", I18n.l(event.rrule_repeat_until.to_date)) if event.rrule_repeat_until
+      result << sprintf("，共%d次", event.rrule_count) if event.rrule_count
       return result
     end
     return ""

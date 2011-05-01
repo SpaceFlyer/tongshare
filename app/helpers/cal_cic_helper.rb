@@ -35,7 +35,7 @@ module CalCicHelper
           :name => name,
           :location => location,
           :extra_info => extra_info,
-          :rrule_frequency => GCal4Ruby::Recurrence::NONE_FREQUENCY)
+          :rrule_frequency => RruleHelper::Recurrence::NONE_FREQUENCY)
         v.save
       else
         v = query.first
