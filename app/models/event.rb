@@ -157,16 +157,12 @@ class Event < ActiveRecord::Base
 
     @recurrence
   end
-
-  def rrule
-    @rrule
-  end
   
   def rrule=(r)
-    @rrule = r
+    super(r)
     if defined? @recurrence
       @recurrence = Recurrence.new
-      @recurrence.load(@rrule) unless self.rrule.blank?
+      @recurrence.load(self.rrule) unless self.rrule.blank?
     end
   end
   
