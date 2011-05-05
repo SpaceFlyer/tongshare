@@ -40,7 +40,10 @@ gem 'calendar_date_select', :git => 'http://github.com/paneq/calendar_date_selec
 gem 'i18n-js' #a plugin to use i18n resource in javascript codes
 
 # for google calendar api and auth related
-gem 'edave-gdata4ruby', '0.2.0'
+#gem 'edave-gdata4ruby', '0.2.0'
+gem 'gdata4ruby', :git => "git://github.com/iamwilhelm/GData4Ruby.git"
+#gem 'edave-gcal4ruby', '0.7.0'
+gem 'gcal4ruby', :git => "git://github.com/iamwilhelm/GCal4Ruby.git"
 gem 'oauth-plugin', :git => "git://github.com/afeld/oauth-plugin.git"
 gem 'portablecontacts', :git => "git://github.com/abhishiv/portablecontacts.git"
 #gem 'icalendar', '1.1.6'

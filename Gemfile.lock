@@ -14,6 +14,22 @@ GIT
       oauth (>= 0.4.4)
 
 GIT
+  remote: git://github.com/iamwilhelm/GCal4Ruby.git
+  revision: ec0209040324c2c0ef364d5f5a0b039a5a54cd07
+  specs:
+    gcal4ruby (0.5.8)
+      gdata4ruby (>= 0.1.5)
+      nokogiri (>= 1.4.0)
+
+GIT
+  remote: git://github.com/iamwilhelm/GData4Ruby.git
+  revision: e68f68898aa2e998c6ac7061a2fa5956413b4c51
+  specs:
+    gdata4ruby (0.2.1)
+      nokogiri (>= 1.4.0)
+      oauth (>= 0.4.4)
+
+GIT
   remote: http://github.com/paneq/calendar_date_select.git
   revision: 8e7ec79435a68665df40b14bd90f47e6ac5e9135
   branch: rails3test
@@ -58,8 +74,6 @@ GEM
     devise (1.1.5)
       bcrypt-ruby (~> 2.1.2)
       warden (~> 1.0.2)
-    edave-gdata4ruby (0.2.0)
-      oauth (>= 0.4.4)
     erubis (2.6.6)
       abstract (>= 1.0.0)
     exception_notification (2.4.0)
@@ -75,6 +89,7 @@ GEM
       treetop (~> 1.4.8)
     mime-types (1.16)
     mysql (2.8.1)
+    nokogiri (1.4.4)
     oauth (0.4.4)
     paperclip (2.3.8)
       activerecord
@@ -121,8 +136,9 @@ DEPENDENCIES
   cancan (= 1.5.1)
   daemons (>= 1.1.0)
   devise (= 1.1.5)
-  edave-gdata4ruby (= 0.2.0)
   exception_notification
+  gcal4ruby!
+  gdata4ruby!
   htmlentities
   i18n-js
   mysql
