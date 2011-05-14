@@ -14,8 +14,8 @@ GIT
       oauth (>= 0.4.4)
 
 GIT
-  remote: git://github.com/iamwilhelm/GCal4Ruby.git
-  revision: ec0209040324c2c0ef364d5f5a0b039a5a54cd07
+  remote: git://github.com/cbmixx/GCal4Ruby.git
+  revision: 8a05a538d320646b1f4762da544222f9d976c9b5
   specs:
     gcal4ruby (0.5.8)
       gdata4ruby (>= 0.1.5)
