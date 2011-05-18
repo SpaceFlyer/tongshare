@@ -5,3 +5,6 @@ tmp/**/*
 nbproject/*
 nbproject
 nbproject/*/*
+.idea
+.idea/*
+

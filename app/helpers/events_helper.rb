@@ -149,6 +149,7 @@ module EventsHelper
     JOINS_INSTANCE = 'INNER JOIN instances ON instances.event_id = events.id'
     WHERE_USER_ID = "user_sharings.user_id = ?"
     WHERE_PRIORITY = "user_sharings.priority = ?"
+    WHERE_UPDATED_AT = "events.updated_at >= ?"
     WHERE_TIME = "instances.end >= ? AND instances.begin <= ?"  #modified by Wander
     WHERE_ENDTIME = "instances.end >= ?"
     WHERE_DECISION = "acceptances.decision = ?"
@@ -170,6 +171,26 @@ module EventsHelper
 
   def query_all_accepted_instance_includes_event(time_begin, time_end, user_id = current_user.id)
     (query_sharing_accepted_instance_includes_event(time_begin, time_end, user_id) + query_own_instance_includes_event(time_begin, time_end, user_id)).sort{|a, b| a.begin <=> b.begin}
+  end
+
+  def query_diff_accepted_instance_includes_event(last_update_time, user_id = current_user.id)
+    query_sharing_diff_accepted_instance_includes_event(last_update_time, user_id)+query_own_diff_instance_includes_event(last_update_time, user_id)
+  end
+
+  def query_own_diff_instance_includes_event(last_update_time, user_id = current_user.id)
+    Instance.includes(:event).where("creator_id = ? AND updated_at >= ?", user_id, last_update_time).order("begin").to_a
+  end
+
+  def query_sharing_diff_accepted_instance_includes_event(last_update_time, user_id)
+    Instance.
+      includes(:event).
+      joins(:event => :acceptances).
+      where(
+        build_where(SQLConstant::WHERE_UPDATED_AT, SQLConstant::WHERE_ACCEPTANCE_USER, SQLConstant::WHERE_DECISION),
+        last_update_time,
+        user_id,
+        Acceptance::DECISION_ACCEPTED).
+      order('instances.begin').to_a
   end
 
   def query_all_group_instance_includes_event(time_begin, time_end, group_id)

@@ -1,5 +1,7 @@
 Tongshare::Application.routes.draw do
 
+  get "private/get_diff"
+
   match "thankful" => "thankful#index"
 
   match "about" => "about#index"
