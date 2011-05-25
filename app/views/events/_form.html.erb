@@ -1,14 +1,14 @@
-  <%= form_for(@event, :html => {:id => "event_form"}) do |f| %>
+<%= form_for(@event, :html => {:id => "event_form"}) do |f| %>
     <% if @event.errors.any? %>
-      <div id="error_explanation">
-        <h2><%= I18n.t 'activerecord.errors.template.header', :count => @event.errors.count %></h2>
+        <div id="error_explanation">
+          <h2><%= I18n.t 'activerecord.errors.template.header', :count => @event.errors.count %></h2>
 
-        <ul>
-          <% @event.errors.full_messages.each do |msg| %>
-            <li><%= msg %></li>
-          <% end %>
-        </ul>
-      </div>
+          <ul>
+            <% @event.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+            <% end %>
+          </ul>
+        </div>
     <% end %>
 
     <div id="event_details">
@@ -16,14 +16,15 @@
         <div class="field">
           <%= f.label :name, :class=>"title" %>
           <%= f.text_field :name, :class=>"textvalue" %>
+          <input type="checkbox" name="public" value="true" <%= @event.public? ? 'checked' : ''%>/>公开此活动
         </div>
         <div class="field">
-          <%= f.label :begin, :class=>"title"  %>
-          <%= f.calendar_date_select :begin, :class=>"textvalue", :minute_interval => 1, :onchange => 'on_change_begin("event_begin", "event_end")'%>
+          <%= f.label :begin, :class=>"title" %>
+          <%= f.calendar_date_select :begin, :class=>"textvalue", :minute_interval => 1, :onchange => 'on_change_begin("event_begin", "event_end")' %>
         </div>
         <div class="field">
-          <%= f.label :end, :class=>"title"%>
-          <%= f.calendar_date_select :end, :class=>"textvalue", :minute_interval => 1, :onchange => 'on_change_end("event_begin", "event_end")'%>
+          <%= f.label :end, :class=>"title" %>
+          <%= f.calendar_date_select :end, :class=>"textvalue", :minute_interval => 1, :onchange => 'on_change_end("event_begin", "event_end")' %>
         </div>
         <div class="field">
           <label class="title">重复</label>
@@ -34,9 +35,9 @@
           <fieldset>
             <div class="field">
               <div id="repeat_legend" style="display:none"></div>
-                <%= f.label :rrule_interval, "每隔", :class=>"title" %>
-                <%= f.number_field :rrule_interval, :min => 1, :maxlength => 3 %>
-                <span id="interval_suffix">天</span>
+              <%= f.label :rrule_interval, "每隔", :class=>"title" %>
+              <%= f.number_field :rrule_interval, :min => 1, :maxlength => 3 %>
+              <span id="interval_suffix">天</span>
             </div>
             <div id="rrule_days_panel" class="field" style="display:none">
               <label class="title">重复于</label><%= days_check_boxes f %>
@@ -47,14 +48,17 @@
                 <%= f.radio_button :rrule_end_condition, Event::RRULE_END_BY_COUNT %>
                 <%= label_tag "event_rrule_end_condition_#{Event::RRULE_END_BY_COUNT}", "重复次数：" %>
                 <%= f.number_field :rrule_count, :min => 1, :max => Event::MAX_INSTANCE_COUNT, :maxlength => 3,
-                      :onclick => "$('event_rrule_end_condition_#{Event::RRULE_END_BY_COUNT}').checked = true" %> 次
-              </div><br/>
+                                   :onclick => "$('event_rrule_end_condition_#{Event::RRULE_END_BY_COUNT}').checked = true" %>
+                次
+              </div>
+              <br/>
+
               <div>
                 <label class="title">&nbsp;&nbsp;</label>
-                <%= f.radio_button :rrule_end_condition, Event::RRULE_END_BY_DATE%>
+                <%= f.radio_button :rrule_end_condition, Event::RRULE_END_BY_DATE %>
                 <%= label_tag "event_rrule_end_condition_#{Event::RRULE_END_BY_DATE}", "终止日期：" %>
                 <%= f.calendar_date_select :rrule_repeat_until, :class=>"datevalue", :time => false,
-                            :onchange => "$('event_rrule_end_condition_#{Event::RRULE_END_BY_DATE}').checked = true"%>
+                                           :onchange => "$('event_rrule_end_condition_#{Event::RRULE_END_BY_DATE}').checked = true" %>
               </div>
 
             </div>
@@ -63,11 +67,11 @@
         <%= javascript_tag "show_repeat_options(\"#{@event.rrule_frequency}\");" %>
 
         <div class="field">
-          <%= f.label :location, :class=>"title"  %>
+          <%= f.label :location, :class=>"title" %>
           <%= f.text_field :location, :class=>"textvalue" %>
         </div>
         <div class="field">
-          <%= f.label :extra_info, :class=>"title"  %>
+          <%= f.label :extra_info, :class=>"title" %>
           <%= f.text_area :extra_info %>
         </div>
       </fieldset>
@@ -78,4 +82,4 @@
       <%= styled_button "取消", :back %>
     </div>
 
-  <% end %>
+<% end %>

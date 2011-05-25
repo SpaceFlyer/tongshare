@@ -12,7 +12,7 @@
 */
 
 label {
-  font-weight: bold; 
+  font-weight: bold;
   color: #666;
 }
 
@@ -29,21 +29,21 @@ hr {border: solid 1px #ddd;}
 
 .hor_menu {height:77px;background:url(../../images/biz/nav-box-left.gif) no-repeat left top;overflow:hidden}
 .hor_menu li,.fright .item {float:left;padding:0 36px 0 38px;background:url(../../images/biz/divider.gif) no-repeat left top;margin:0 2px 0 -2px}
-.hor_menu li a,.fright .item .item_link {color:#666;font-size:1.231em;line-height:1.2em;text-decoration:none;font-weight:bold;font-family:"trebuchet MS",Helvetica,sans-serif;text-transform:uppercase;display:block;
+    .hor_menu li a,.fright .item .item_link {color:#666;font-size:1.231em;line-height:1.2em;text-decoration:none;font-weight:bold;font-family:"trebuchet MS",Helvetica,sans-serif;text-transform:uppercase;display:block;
   margin-top:20px;
   padding: 5px 5px 5px 5px;}
-.hor_menu li a:hover,.nav-box nav ul li.current a {color:#f85811}
+.hor_menu li a:hover,.nav-box nav ul li.current a, .fright .item a.item_link:hover {color:#f85811;cursor:pointer;}
 
-.item a:hover {
-  background-color: #ffdd2a;
-}
+/*.item a:hover {*/
+  /*background-color: #ffdd2a;*/
+/*}*/
 .item:hover .vertical_menu, .item.over .vertical_menu{
   display: block;
 }
 
 .vertical_menu {
   position: absolute;
-  right: 10px; 
+  right: 10px;
   top: 45px;
   width: 100px;
   border: solid 1px #ffcc2a;
@@ -57,6 +57,12 @@ hr {border: solid 1px #ddd;}
   text-align: center;
 }
 #drop_menu li a{
+    color: #666;
+  font-size: 13px;
+}
+
+#drop_menu li a:hover{
+    color: #D83811;
   font-size: 13px;
 }
 
@@ -67,10 +73,10 @@ root {
 .fleft {float:left;}
 .fright {float:right;}
 .nav-box nav ul.fright {background:none;padding-right:34px}
-.nav-box nav ul.fright li {padding:0 23px 0 25px}
+.nav-box nav ul.fright li {padding:20px 0px 0px 25px}
 
 #welcome {
-    margin-left: 50px;
+    margin-left: 20px;
 }
 
 #welcome li {
@@ -95,8 +101,8 @@ root {
 
 #index_logo {
     margin-top: 10px;
-    color: #ee6600;
     font-size: 28px;
+    text-transform: none;
 }
 
 #content-body {
@@ -104,9 +110,9 @@ root {
 }
 
 footer div {
-  text-align:center; 
-  border-top: solid 1px #999; 
-  padding-top: 10px; 
+  text-align:center;
+  border-top: solid 1px #999;
+  padding-top: 10px;
   margin-bottom: 20px;
 }
 
@@ -194,7 +200,7 @@ footer div {
 #search_input {
   float: left;
   margin: 10px 5px 0px 20px;
-  width: 180px;
+  width: 160px;
 }
 #search_button {
   margin: 8px 5px 0px 0px;
@@ -287,7 +293,7 @@ footer div {
   margin-right: -30px;
   padding-left: 20px;
   padding-right: 20px;
-  border: solid 1px #eecc00; 
+  border: solid 1px #eecc00;
 }
 
 .link1 {
@@ -307,11 +313,12 @@ footer div {
 
 
 .noticebar {
-    margin-left: 50px;
+    margin-left: 20px;
 }
 
 .noticebar #alert {
     margin-bottom: 15px;
+    margin-top: 15px;
     color: #FF5811;
     font-weight: bold;
 }
@@ -347,7 +354,7 @@ footer div {
     font-size: 15px;
     padding: 10px 0px 10px 0px;
     min-width: 100px;
-    background: url("../../images/biz/link1-bgd-lardge.gif") repeat-x scroll left top transparent; 
+    background: url("../../images/biz/link1-bgd-lardge.gif") repeat-x scroll left top transparent;
     color: #fff;
     cursor:pointer;
 }
@@ -459,11 +466,19 @@ footer div {
 }
 
 .field_help {
-    margin-left: 105px;
+    margin-left: 115px;
+}
+
+.field_help li {
+    margin-left:3em;
+}
+
+div.validated_emails {
+    display: inline-block;
 }
 
 .field_div {
-    margin-left: 105px;
+    margin-left: 115px;
 }
 
 .stressed {
@@ -507,7 +522,7 @@ a.del {
 }
 
 .instruction_list {
-    list-style-type: decimal;   
+    list-style-type: decimal;
 }
 
 .textfield_narrow {
@@ -531,3 +546,18 @@ a.del {
     margin-left: 0px;
 }
 
+#search_event_button{
+    /*background: #FFA500;*/
+    /*border-radius: 5px;*/
+    /*padding: 20px 13px 20px 13px;*/
+    /*border: solid 0 white;*/
+    /*color: #fff;*/
+    /*display:block;*/
+    background:url(../../images/biz/link1-bgd.gif) left top repeat-x;color:#fff;text-decoration:none;
+    padding: 3px 13px 5px 13px;
+    border: solid 0 #ffffff;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+/*#search_event_button:hover { text-decoration: underline; cursor: pointer;}*/

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110415100242) do
+ActiveRecord::Schema.define(:version => 20110525065942) do
 
   create_table "acceptances", :force => true do |t|
     t.integer  "event_id"
@@ -199,6 +199,16 @@ ActiveRecord::Schema.define(:version => 20110415100242) do
   add_index "sharings", ["event_id"], :name => "index_sharings_on_event_id"
   add_index "sharings", ["shared_from"], :name => "index_sharings_on_shared_from"
 
+  create_table "sms_confirmations", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "token"
+    t.boolean  "confirmed"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "sms_confirmations", ["user_id"], :name => "index_sms_confirmations_on_user_id"
+
   create_table "user_extras", :force => true do |t|
     t.integer  "user_id"
     t.string   "name"
@@ -218,9 +228,25 @@ ActiveRecord::Schema.define(:version => 20110415100242) do
     t.datetime "avatar_updated_at"
     t.string   "address"
     t.string   "phone"
+    t.string   "gender"
+    t.string   "city"
+    t.string   "org"
+    t.string   "homepage"
+    t.string   "qq"
+    t.string   "fetion"
+    t.string   "msn"
+    t.string   "gtalk"
   end
 
+  add_index "user_extras", ["city"], :name => "index_user_extras_on_city"
+  add_index "user_extras", ["fetion"], :name => "index_user_extras_on_fetion"
+  add_index "user_extras", ["gender"], :name => "index_user_extras_on_gender"
+  add_index "user_extras", ["gtalk"], :name => "index_user_extras_on_gtalk"
+  add_index "user_extras", ["homepage"], :name => "index_user_extras_on_homepage"
+  add_index "user_extras", ["msn"], :name => "index_user_extras_on_msn"
   add_index "user_extras", ["name"], :name => "index_user_extras_on_name"
+  add_index "user_extras", ["org"], :name => "index_user_extras_on_org"
+  add_index "user_extras", ["qq"], :name => "index_user_extras_on_qq"
   add_index "user_extras", ["user_id"], :name => "index_user_extras_on_user_id"
 
   create_table "user_identifiers", :force => true do |t|
@@ -229,7 +255,8 @@ ActiveRecord::Schema.define(:version => 20110415100242) do
     t.string   "login_type"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "confirmed",   :default => false
+    t.boolean  "confirmed",     :default => false
+    t.string   "confirm_token"
   end
 
   add_index "user_identifiers", ["confirmed"], :name => "index_user_identifiers_on_confirmed"

@@ -23,7 +23,7 @@ class UserIdentifier < ActiveRecord::Base
   #TODO: "Value has already been taken" -> "xxx has already been taken"
   validate :value_format_check
 
-  attr_accessible :login_value, :login_type, :confirmed, :user, :user_id
+  attr_accessible :login_value, :login_type, :confirmed, :user, :user_id, :confirm_token
 
   
   def value_format_check

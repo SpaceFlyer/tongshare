@@ -1,182 +1,168 @@
 <!DOCTYPE html>
 <html lang="zh">
-  <head>
-    <title>同享日程<%= "-#{@title}" if defined? @title%></title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<head>
+  <title>同享日程<%= "-#{@title}" if defined? @title %></title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-    <%= javascript_include_tag "translations.js" %>
-    <%= javascript_include_tag "i18n.js" %>
-    <%= javascript_include_tag :defaults %>
+  <%= javascript_include_tag "translations.js" %>
+  <%= javascript_include_tag "i18n.js" %>
+  <%= javascript_include_tag :defaults %>
 
-    <%= stylesheet_link_tag "application" %>
-    <%= stylesheet_link_tag "biz/reset", "biz/layout", "biz/style", :media=>"all"%>
+  <%= stylesheet_link_tag "application" %>
+  <%= stylesheet_link_tag "biz/reset", "biz/layout", "biz/style", :media=>"all" %>
 
 <%#= javascript_include_tag "biz/jquery-1.4.2.min" %>
-    <%= javascript_include_tag "biz/maxheight"%>
-    <%#= javascript_include_tag "biz/script" %>
-    <!--[if lt IE 7]>
-    <%= stylesheet_link_tag "biz/ie6"%>
+  <%= javascript_include_tag "biz/maxheight" %>
+  <%#= javascript_include_tag "biz/script" %>
+  <!--[if lt IE 7]>
+    <%= stylesheet_link_tag "biz/ie6" %>
     <%= javascript_include_tag "biz/ie_png" %>
       <script type="text/javascript">
               ie_png.fix('.png');
       </script>
     <![endif]-->
-    <!--[if lt IE 9]>
+  <!--[if lt IE 9]>
     <%= javascript_include_tag "biz/html5" %>
     <![endif]-->
-    <script>
+  <script>
       var defaultValue = "按时间、地点、公共群组查找公共日程";
-    </script>
-    <%= csrf_meta_tag %>
+  </script>
+  <%= csrf_meta_tag %>
 
-    <%= calendar_date_select_includes :locale => 'cn' %>
+  <%= calendar_date_select_includes :locale => 'cn' %>
 
-    <%= stylesheet_link_tag "scaffold" %>
+  <%= stylesheet_link_tag "scaffold" %>
 
-    <%= yield :js_ext %>
-    <%= yield :css_ext %>
-    <%= yield :meta_ext %>
-  </head>
+  <%= yield :js_ext %>
+  <%= yield :css_ext %>
+  <%= yield :meta_ext %>
+</head>
 
-  <body id="page1" onLoad="new ElementMaxHeight();">
-    <div class="tail-bottom">
-      <div id="main">
-        <!-- header -->
-        <header>
-          <div class="nav-box">
-            <nav>
-              <ul class="fright">
-                <% if user_signed_in? %>
-                  <!--<li></li>-->
-                  <li class="item">
-                  <a id="drop_btn" class="item_link">更多</a>
-                  <ul id="drop_menu" class="vertical_menu">
-                    <li><%= link_to "个人资料", edit_user_registration_path%></li>
-                    <li><%= link_to "意见反馈", "http://blog.tongshare.com/feedback", :target => "_blank"%></li>
-                    <li><%= link_to "注销登陆", destroy_user_session_path %></li>
-                  </ul>
-                  </li>
-
-                <% end %>
-              </ul>
-              <ul class="hor_menu">
-                  <% if user_signed_in? %>
-                  <li>
-                    <%= link_to "我的日程", :controller => "events", :range => :next %>
-                  </li>
-                  <li>
-                    <%= link_to "新建活动", new_event_path%>
-                  </li>
-                  <li>
-                    <%= link_to "我的好友", '/friendship/show?type=bidirectional'%>
-                  </li>
-                  <li>
-                    <%= link_to '我的群组', '/groups/' %>
-                  </li>
-                  <li>
-                    <%= link_to "看谁有空", url_for(:controller => "search"), :title => "查询Ta(们)可能的空余时间" %>
-                  </li>
-                  <%#*<li><a href="#">个人信息</a></li>%>
-                  <%#*<li><a href="#">日历同步</a></li>%>
-                  <% else %>
-                  <li>
-                    <%= link_to "同享日程", :root, :id => "index_logo" %>
-                  </li>
-                  <%  end %>
-              </ul>
-
-            </nav>
+<body id="page1" onLoad="new ElementMaxHeight();">
+<div class="tail-bottom">
+  <div id="main">
+    <!-- header -->
+    <header>
+      <div class="nav-box">
+        <nav>
+          <ul class="fright">
+            <% if user_signed_in? %>
+                <li><%= link_to(image_tag("logout-icon.png", :size => "28x28"), destroy_user_session_path, :title=>"注销") %></li>
+            <% end %>
+          </ul>
+          <ul class="hor_menu">
+            <li>
+              <%= link_to "i.同享", :root, :id => "index_logo" %>
+            </li>
+            <% if user_signed_in? %>
+                <li>
+                  <%= link_to "我的日程", :controller => "events", :range => :next %>
+                </li>
+                <li>
+                  <%= link_to "新建活动", new_event_path %>
+                </li>
+                <li>
+                  <%= link_to "我的好友", '/friendship/show?type=bidirectional' %>
+                </li>
+                <li><%= link_to "个人资料", edit_user_registration_path %></li>
+                <%#*<li><a href="#">个人信息</a></li>%>
+                <%#*<li><a href="#">日历同步</a></li>%>
+            <% end %>
+          </ul>
+        </nav>
+      </div>
+      <% if not user_signed_in? %>
+          <div id="search_box_home">
+            <form name="search_box" action="/search/box">
+              <input id="search_input" type="text" name="keyword" value="找某地点、组织的日程"
+                     onclick="if(value==defaultValue)value=''" onblur="if(!value)value=defaultValue" onkeydown="if(value==defaultValue)value=''"></input>
+              <input id="search_button" class="link1 commit_button" type="submit" value="搜索" title='输入姓名查找用户；输入地点查找该地点的日程；输入公共用户查看其日程；输入共群群组名查看公共群组的日程'></input>
+            </form>
+            <!--<label>热门搜索:</label>-->
+            <!--<a href="/search/box?keyword=百年校庆">百年校庆</a>-->
+            <!--<a href="/search/box?keyword=大礼堂">大礼堂</a>-->
+            <!--<a href="/search/box?keyword=六教">六教</a>-->
           </div>
-        <% if not user_signed_in? %>
-                <div id="search_box_home">
-                  <form name="search_box" action="/search/box">
-                    <input id="search_input" type="text" name="keyword" value="找某地点、组织的日程"
-                    onclick="if(value==defaultValue)value=''" onblur="if(!value)value=defaultValue" onkeydown="if(value==defaultValue)value=''"></input>
-                    <input id="search_button" class="link1 commit_button" type="submit" value="搜索" title='输入姓名查找用户；输入地点查找该地点的日程；输入公共用户查看其日程；输入共群群组名查看公共群组的日程'></input>
-                  </form>
-                <label>热门搜索:</label>
-                  <a href="/search/box?keyword=百年校庆">百年校庆</a>
-                  <a href="/search/box?keyword=大礼堂">大礼堂</a>
-                  <a href="/search/box?keyword=六教">六教</a>
-                </div>
-              <% end %>
-        </header>
+      <% end %>
+    </header>
 
-        <div class="wrapper indent">
-          <table>
-             <tr>
-              <td width="700px">
-              <section id="content">
-                <div class="noticebar">
+    <div class="wrapper indent">
+      <table>
+        <tr>
+          <td width="700px">
+            <section id="content">
+              <div class="noticebar">
                 <% if alert %>
-                  <div id="alert"><%= alert %></div>
+                    <div id="alert"><%= alert %></div>
                 <% end %>
-                <% if notice%>
-                  <div id="notice"><%= notice %></div>
+                <% if notice %>
+                    <div id="notice"><%= notice %></div>
                 <% end %>
-                </div>
-                <%= yield %>
-              </section>
-              </td>
-              <td id="aside_container" width="300px">
-                <% if user_signed_in? %>
+              </div>
+              <%= yield %>
+            </section>
+          </td>
+          <td id="aside_container" width="300px">
+            <% if user_signed_in? %>
                 <div id="search_box">
                   <form name="search_box" action="/search/box">
-                    <input id="search_input" type="text" name="keyword" value="找人；找某地点、组织的日程"
-                    onclick="if(value==defaultValue)value=''" onblur="if(!value)value=defaultValue" onkeydown="if(value==defaultValue)value=''" ></input>
+                    <input id="search_input" type="text" name="keyword" value="直接输入人名、地点搜索"
+                           onclick="if(value==defaultValue)value=''" onblur="if(!value)value=defaultValue" onkeydown="if(value==defaultValue)value=''"></input>
                     <input id="search_button" class="link1 commit_button" type="submit" value="搜索" title='输入姓名查找用户；输入地点查找该地点的日程；输入公共用户查看其日程；输入共群群组名查看公共群组的日程'></input>
                   </form>
-                  <label>热门搜索:</label>
-                  <a href="/search/box?keyword=百年校庆">百年校庆</a>
-                  <a href="/search/box?keyword=大礼堂">大礼堂</a>
-                  <a href="/search/box?keyword=六教">六教</a>
+                  <!--<label>热门搜索:</label>-->
+                  <!--<a href="/search/box?keyword=百年校庆">百年校庆</a>-->
+                  <!--<a href="/search/box?keyword=大礼堂">大礼堂</a>-->
+                  <!--<a href="/search/box?keyword=六教">六教</a>-->
                 </div>
-              <% end %>
-                <% if not user_signed_in? %>
+            <% end %>
+            <% if not user_signed_in? %>
                 <div id="login_container" class="inside">
                   <h2>登录</h2>
-                  <%= render(:partial => "sessions_extended/login_form", :locals => {:small => true})%>
+                  <%= render(:partial => "sessions_extended/login_form", :locals => {:small => true}) %>
                   <br>
                 </div>
-              <% end %>
-                <%= yield :aside %>
-                <div id="mobile_tip">
-                  手机访问：<a href="http://m.tongshare.com">tongshare.com</a> 更省流量<br/>
-                <!--
+            <% end %>
+            <%= yield :aside %>
+            <div id="mobile_tip">
+              手机访问：<a href="http://m.tongshare.com">tongshare.com</a> 更省流量<br/>
+              <!--
                   <div style="text-align:center"><%= image_tag "qrcode.gif", :title=>"用手机扫描二维码获取本站地址" %></div>
                 -->
-                </div>
-              </td>
-            </tr>
-          </table>
-        </div>
-        <!-- footer -->
-        <footer>
-          <div>
-            <p class="footer_logo">BRAVURA | 华彩 出品</p>
-            <p class="footer_links">
-              <a href="/about">关于</a>
-              | <a href="/thankful">鸣谢</a>
-              | <a href="http://blog.tongshare.com/feedback" target="_blank">官方博客</a>
-              | <a href="http://blog.tongshare.com/features" target="_blank">帮助中心</a>
-            </p>
-          </div>
-         <!-- 
-          <div class="inside">
-            BRAVURA | 华彩 出品<br/><br/>
-            <div id="acknowledge">致谢：清华大学计算机系软件所、高性能所、ACM/ICPC实验室<br/>
-            清华大学信研院CPU中心、网络安全实验室<br/>
-            清华大学计算机系团委、科协、学生会<br/>
-            清华大学互联网协会、电脑协会<br/>
-            清华大学计算中心<br/>
             </div>
-            <br/>
-            <a href="http://www.templatemonster.com" class="new_window">Website template</a> designed by TemplateMonster.com
-          </div>
-          -->
-        </footer>
-      </div>
+          </td>
+        </tr>
+      </table>
     </div>
+    <!-- footer -->
+    <footer>
+      <div>
+        <p class="footer_logo">BRAVURA | 华彩 出品</p>
 
-  </body>
+        <p class="footer_links">
+          <a href="/about">关于</a>
+          | <a href="/thankful">鸣谢</a>
+          | <a href="http://blog.tongshare.com/feedback" target="_blank">官方博客</a>
+          | <a href="http://blog.tongshare.com/features" target="_blank">帮助中心</a>
+          | <%= link_to "意见反馈", "http://blog.tongshare.com/feedback", :target => "_blank" %>
+        </p>
+      </div>
+      <!--
+      <div class="inside">
+        BRAVURA | 华彩 出品<br/><br/>
+        <div id="acknowledge">致谢：清华大学计算机系软件所、高性能所、ACM/ICPC实验室<br/>
+        清华大学信研院CPU中心、网络安全实验室<br/>
+        清华大学计算机系团委、科协、学生会<br/>
+        清华大学互联网协会、电脑协会<br/>
+        清华大学计算中心<br/>
+        </div>
+        <br/>
+        <a href="http://www.templatemonster.com" class="new_window">Website template</a> designed by TemplateMonster.com
+      </div>
+      -->
+    </footer>
+  </div>
+</div>
+
+</body>
 </html>

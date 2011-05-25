@@ -22,7 +22,7 @@ class User < ActiveRecord::Base
          :registerable,
          :validatable,
          :confirmable, #email verify
-         :authentication_keys => [:id]
+         :authentication_keys => [:email]
 
   before_save :ensure_authentication_token 
        
@@ -112,9 +112,9 @@ class User < ActiveRecord::Base
     result
   end
 
-  def active?
-    true
-  end
+#  def active?
+#    true
+#  end
   
   def has_valid_email(email=nil)
     return false if (!self.confirmed? || nil_email_alias?(self.email))
@@ -155,6 +155,14 @@ class User < ActiveRecord::Base
 
   def public?
     return self.user_extra && self.user_extra.public
+  end
+
+  def validated_emails
+    result = []
+    for uid in user_identifier
+      result << uid.login_value if (uid.login_type == UserIdentifier::TYPE_EMAIL && uid.confirmed)
+    end
+    return result
   end
 
 end

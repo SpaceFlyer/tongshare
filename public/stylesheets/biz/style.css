@@ -1,5 +1,7 @@
+
+
 /* Getting the new tags to behave */
-article,aside,audio,canvas,command,datalist,details,embed,figcaption,figure,footer,header,hgroup,keygen,meter,nav,output,progress,section,source,video {display:block}
+a   \rticle,aside,audio,canvas,command,datalist,details,embed,figcaption,figure,footer,header,hgroup,keygen,meter,nav,output,progress,section,source,video {display:block}
 mark,rp,rt,ruby,summary,time {display:inline}
 /* Global properties */
 body {background:#fff;font-family:Arial,Helvetica,sans-serif;font-size:100%;line-height:1em;color:#5c5c5c}
@@ -88,7 +90,7 @@ h2 span {}
 .box .inner {padding:25px 49px 45px 49px}
 .box h2 {font-size:1.923em;margin-bottom:50px}
 /* content */
-#content .inside {padding:24px 40px 30px 50px}
+#content .inside {padding:5px 40px 30px 20px}
 /* Sidebar */
 aside .inside {padding:12px 45px 12px 40px}
 .inside {padding:12px 45px 12px 40px}
@@ -99,10 +101,12 @@ footer .inside {padding-top:36px}
 form {clear:right;width:100%;overflow:hidden}
 form fieldset {border:none;float:left;}
 form .field {clear:both;min-height:30px;height:auto !important;height:30px}
-form .field .title {float:left;width:104px;font-weight:bold; font-size: 13px;}
+form .field_left {min-height:30px;height:auto !important;height:30px;width:305px;float:left}
+form .field_right {min-height:30px;height:auto !important;height:30px;width:305px;float:right}
+form .field .title, form .field_left .title, form .field_right .title {float:left;width:102px;font-weight:bold; font-size: 13px; text-align: right; padding-right: 1em;}
 form .field .textvalue {width:267px;padding:2px 0 2px 3px;border:1px solid #d2d2d2}
 form .field .datevalue {width:80px;padding:2px 0 2px 3px;border:1px solid #d2d2d2}
-form textarea {width:500px;height:100px;padding:2px 0 2px 3px;border:1px solid #d2d2d2;margin-bottom:15px;overflow:auto; /*float:left*/}
+form textarea {width:400px;height:100px;padding:2px 0 2px 3px;border:1px solid #d2d2d2;margin-bottom:15px;overflow:auto; /*float:left*/}
 form .wrapper {display:inline}
 form .wrapper .link1 {float:left; margin-right: 20px;}
 #search-form fieldset {position:absolute;right:50px;top:129px}

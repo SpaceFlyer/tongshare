@@ -197,6 +197,7 @@ class EventsController < ApplicationController
   # GET /events/new.xml
   def new
     @event = Event.new
+    @event.share_token = Event::PUBLIC_TOKEN
 
     #automatically set time
     range = params[:range].blank? ? :day : params[:range].to_sym
@@ -243,6 +244,12 @@ class EventsController < ApplicationController
     @event.creator_id = current_user.id
     authorize! :create, @event
     
+    if params[:public] == 'true'
+      @event.set_public
+    else
+      @event.set_private
+    end
+
     ret = @event.save
     respond_to do |format|
       if ret
@@ -261,6 +268,12 @@ class EventsController < ApplicationController
     @event = Event.find(params[:id])
     authorize! :update, @event
     
+    if params[:public] == 'true'
+      @event.set_public
+    else
+      @event.set_private
+    end
+
     time_selector2ruby(@event)
     
     ret = @event.update_attributes(params[:event])

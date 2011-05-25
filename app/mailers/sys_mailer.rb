@@ -87,4 +87,14 @@ class SysMailer < ActionMailer::Base
     end
   end
 
+  def validate_mail(user_id, email_id)
+    return nil if email_id.login_type != UserIdentifier::TYPE_EMAIL
+    @email = email_id.login_value
+    @user_id = user_id
+    @token = email_id.confirm_token
+    @auth_token = User.find(user_id).authentication_token
+    headers = {:to => @email, :subject => "身份验证邮箱确认"}
+    mail(headers)
+  end
+
 end

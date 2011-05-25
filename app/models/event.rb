@@ -1,3 +1,6 @@
+
+
+
 require 'gcal4ruby'
 
 class Event < ActiveRecord::Base
@@ -267,6 +270,11 @@ class Event < ActiveRecord::Base
 
   def set_public
     self.share_token = PUBLIC_TOKEN
+    self.save!
+  end
+
+  def set_private
+    self.share_token = rand(36**8).to_s(36)
     self.save!
   end
   

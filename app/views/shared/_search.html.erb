@@ -1,0 +1,76 @@
+<%= content_box nil, "高级搜索" do %>
+    <form accept-charset="UTF-8" action="/search/public_events" class="search" id="event_form" method="post">
+      <fieldset id="event_filter">
+        <div class="field_left">
+          <label class="title">搜索开始时间</label>
+          <%= calendar_date_select_tag :begin, Time.now, :minute_interval => 1, :time => true, :onchange => 'on_change_begin("begin", "end")' %>
+        </div>
+
+        <div class="field_right">
+          <label for="begin" class="title">搜索结束时间</label>
+          <%= calendar_date_select_tag :end, Time.now+1.day, :minute_interval => 1, :time => true, :onchange => 'on_change_end("begin", "end")' %>
+        </div>
+
+        <script type="text/javascript">
+            period = 24 * 3600 * 1000 //default for 1 day
+        </script>
+
+        <div class="field_left">
+          <label class="title">活动名包含</label>
+          <input type="text" id="event_title" name="event_title"/>
+        </div>
+
+        <div class="field_right">
+          <label class="title">地点包含</label>
+          <input type="text" id="location" name="location"/>
+        </div>
+      </fieldset>
+
+      <fieldset id="creator_filter">
+        <div class="field_left">
+          <label class="title">创建者城市</label>
+          <input type="text" id="creator_city" name="event_city"/>
+        </div>
+
+        <div class="field_right">
+          <label class="title">创建者学校/单位</label>
+          <input type="text" id="creator_org" name="creator_org"/>
+        </div>
+
+        <div class="field_left">
+          <label class="title">创建者院系/部门</label>
+          <input type="text" id="creator_department" name="creator_department"/>
+        </div>
+
+        <div class="field_right">
+          <label class="title">创建者性别</label>
+          <select name="gender">
+            <option value="all">任意</option>
+            <option value="male">男</option>
+            <option value="female">女</option>
+          </select>
+        </div>
+
+        <div class="field_left">
+          <label class="title">&nbsp;</label>
+          <input type="checkbox" id="must_have_avatar" name="must_have_avatar" value="true"/>创建者必须有头像
+        </div>
+
+        <div class="field_right">
+          <label class="title">&nbsp;</label>
+          <input type="checkbox" id="must_have_renren" name="must_have_renren" value="true"/>创建者必须有人人主页
+        </div>
+
+      </fieldset>
+
+      <!--<div class="field_left">-->
+      <div align="center">
+        <input id="search_event_button" type="submit" name="search_event" value="查询活动"/>
+      </div>
+      <!--</div>-->
+      <!--<div class="field_right">-->
+        <!--<input class="link1 commit_button" type="submit" name="search_creator" value="查询活动创建者"/>-->
+      <!--</div>-->
+
+    </form>
+<% end %>

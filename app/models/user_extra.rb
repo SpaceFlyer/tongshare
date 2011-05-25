@@ -3,7 +3,7 @@ class UserExtra < ActiveRecord::Base
 
   include SiteConnectHelper
   attr_accessible :user_id, :name, :mobile, :public, :renren_id, :renren_url, :reject_warning_flag,
-    :photo_url, :department, :hide_profile, :profile_status, :avatar, :address, :phone
+    :photo_url, :department, :hide_profile, :profile_status, :avatar, :address, :phone, :org, :qq, :msn, :fetion, :gtalk, :city, :gender
   belongs_to :user
 
   validates_format_of :renren_id, :with => /\A((id:[0-9]+)|(domain:.+))\Z/, :allow_nil => true, :allow_blank => true

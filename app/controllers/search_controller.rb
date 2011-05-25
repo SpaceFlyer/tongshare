@@ -145,4 +145,8 @@ class SearchController < ApplicationController
     end
   end
 
+  def public_events
+
+  end
+
 end

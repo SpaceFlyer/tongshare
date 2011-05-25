@@ -1,137 +1,172 @@
 <%= content_box "个人", "资料" do %>
-  <%= devise_error_messages_translated! %>
-  <div id="profile_header">
-  <table><tr>
-  <td>
-    <%= image_tag( ((@photo_url.nil? || @photo_url.blank?) ? 'default.jpg' : @photo_url), :onError => "this.src='/images/default.jpg';" ) %>
-  </td>
-  <td class="detail">
-    <strong><%= current_user.friendly_name %></strong><br>
-  </td>
-  </tr></table>
-  </div>
-  <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put, :multipart => true }) do |f| %>
-    
-    <div class="stressed">以星号(*)开头的信息,只有您的好友可见</div><br/>
-    <div class="field">
-      <% resource[:email] = '' if defined?(resource) && (nil_email_alias?(resource[:email]) || !resource.confirmed?) %>
-      <%= f.label :email, '*电子邮箱', :class=>"title" %>
-      <%= f.text_field :email, :class=>"textvalue" %>
-      <%#= f.label :email, "电子邮箱", :class=>"title" %>
-      <%#= f.text_field :email, :class=>"textvalue" %>
-    </div>
+    <%= devise_error_messages_translated! %>
+    <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => {:method => :put, :multipart => true}) do |f| %>
 
-    <%= f.fields_for :user_extra do |extra| %>
-      <div class="field">
-        <label class="title">&nbsp;</label>
-        <%= extra.check_box :reject_warning_flag %>
-        <%= extra.label :reject_warning_flag, "不发送活动报警邮件到我的邮箱"%>
-      </div>
-
-    <% if current_user.user_extra && current_user.user_extra.public %>
-      <div class="field">
-        <%= extra.label :name, "名称", :class => 'title'%>
-        <%= extra.text_field :name %>
-      </div>
-    <% end %>
-
-      <div class="field">
-        <%= extra.label :department, "院系", :class => 'title'%>
-        <%= extra.text_field :department %>
-      </div>
-
-      <div class="field">
-        <%= extra.label :address, "*寝室或住宅地址", :class => 'title'%>
-        <%= extra.text_field :address %>
-      </div>
-
-      <div class="field">
-        <%= extra.label :phone, "*寝室或固定电话", :class => 'title'%>
-        <%= extra.text_field :phone %>
-      </div>
-
-      <div class="field">
-        <label class="title">上传新头像</label>
-        <%= extra.file_field :avatar %>
-      </div>
-
-      <div class="field">
-        <%= extra.label :renren_url, "人人网个人主页", :class=>"title"%>
-        <%= extra.text_field :renren_url, :class=>"textvalue" %>
-        <div class="field_help">
-          <div>想认识上同一节课的Ta吗？填写你的人人个人主页地址，让Ta找到你吧！</div>
-          <div class="stressed">怎样获得人人网个人主页地址？</div>
-          <div>
-            <ul class="instruction_list">
-              <li>登录<a href="http://www.renren.com" target="_blank">人人网</a></li>
-              <li>登录后，点击页面上方的“个人主页”链接，从浏览器的地址栏中复制“个人主页”页面的地址。</li>
-              <li>正确的地址类似于：http://www.renren.com/profile.do?id=356208904</li>
-            </ul>
-          </div>
+        <div class="field">
+          <% resource[:email] = '' if defined?(resource) && (nil_email_alias?(resource[:email]) || !resource.confirmed?) %>
+          <%= f.label :email, '*电子邮箱', :class=>"title" %>
+          <%= f.text_field :email, :class=>"textvalue", :disabled=>true %>
+          <%#= f.label :email, "电子邮箱", :class=>"title" %>
+          <%#= f.text_field :email, :class=>"textvalue" %>
         </div>
-      </div>
 
-      <div class="field">
-        <label class="title">&nbsp;</label>
-        <%= extra.check_box :hide_profile %>
-        <%= extra.label :hide_profile, "不告诉一起参加活动的朋友们我的人人链接、头像以及院系"%>
-      </div>
+        <%= f.fields_for :user_extra do |extra| %>
+            <fieldset id="basic_fields">
+              <div class="field">
+                <%= extra.label :name, "姓名", :class => 'title' %>
+                <%= extra.text_field :name %>
+              </div>
+
+              <div class="field">
+                <%= extra.label :gender, "性别", :class => 'title' %>
+                <select name="user[user_extra_attributes][gender]">
+                  <% if resource.user_extra.gender == "male" %>
+                      <option value="male">男</option>
+                      <option value="female">女</option>
+                  <% else %>
+                      <option value="female">女</option>
+                      <option value="male">男</option>
+                  <% end %>
+                </select>
+              </div>
+
+              <div class="field">
+                <label class="title">当前头像</label>
+                <%= image_tag(((@photo_url.nil? || @photo_url.blank?) ? 'default.jpg' : @photo_url), :onError => "this.src='/images/default.jpg';") %>
+              </div>
+
+              <div class="field">
+                <label class="title">上传新头像</label>
+                <%= extra.file_field :avatar %>
+              </div>
+
+              <div class="field">
+                <%= extra.label :city, "城市", :class => 'title' %>
+                <%= extra.text_field :city %>
+              </div>
+
+              <div class="field">
+                <%= extra.label :org, "学校/单位", :class => 'title' %>
+                <%= extra.text_field :org %>
+              </div>
+
+              <div class="field">
+                <%= extra.label :department, "院系/部门", :class => 'title' %>
+                <%= extra.text_field :department %>
+              </div>
+
+              <div class="field">
+                <%= extra.label :renren_url, "人人网个人主页", :class=>"title" %>
+                <%= extra.text_field :renren_url, :class=>"textvalue" %>
+                <div class="field_help">
+                  <div class="stressed">怎样获得人人网个人主页地址？</div>
+                  <div>
+                    <ul class="instruction_list">
+                      <li>登录<a href="http://www.renren.com" target="_blank">人人网</a></li>
+                      <li>登录后，点击页面上方的“个人主页”链接，从浏览器的地址栏中复制“个人主页”页面的地址。</li>
+                      <li>正确的地址类似于：http://www.renren.com/profile.do?id=356208904</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+
+            <fieldset id="im_fields">
+              <div class="field">
+                <%= extra.label :qq, "QQ号", :class => 'title' %>
+                <%= extra.text_field :qq %>
+              </div>
+
+              <div class="field">
+                <%= extra.label :fetion, "飞信号", :class => 'title' %>
+                <%= extra.text_field :fetion %>
+              </div>
+
+              <div class="field">
+                <%= extra.label :msn, "MSN", :class => 'title' %>
+                <%= extra.text_field :msn %>
+              </div>
+
+              <div class="field">
+                <%= extra.label :gtalk, "GTalk", :class => 'title' %>
+                <%= extra.text_field :gtalk %>
+              </div>
+            </fieldset>
+
+            <fieldset id="id_emails">
+              <div class="field">
+                <label class="title">添加验证邮箱</label>
+                <input type="text" name="id_email" size="30"/>
+              </div>
+
+              <div class="field">
+                <label class="title">已验证邮箱</label>
+
+                <div class="validated_emails">
+                  <ul>
+                    <% for email in resource.validated_emails %>
+                        <li><%= email %></li>
+                    <% end %>
+                  </ul>
+                </div>
+              </div>
+            </fieldset>
+
+            <div class="field">
+              <label class="title">&nbsp;</label>
+              <%= f.submit :submit, :value => "提交", :class => 'link1 commit_button' %>
+              <%= styled_button "取消", :back %>
+            </div>
+        <% end %>
+
     <% end %>
-
-    <div class="field">
-      <label class="title">&nbsp;</label>
-      <%= f.submit :submit, :value => "提交", :class => 'link1 commit_button' %>
-      <%= styled_button "取消", :back %>
-    </div>
-
-  <% end %>
 <% end %>
 
-<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put }) do |f| %>
-  <%= content_box "修改", "密码", true do %>
+<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => {:method => :put}) do |f| %>
+    <%= content_box "修改", "密码", true do %>
 
-    <%= f.hidden_field :email, :class=>"textfield" %>
-    <%= f.fields_for :user_extra do |extra| %>
-      <div class="field">
-        <%= extra.hidden_field :renren_url, :class=>"textfield" %>
-      </div>
+        <%= f.hidden_field :email, :class=>"textfield" %>
+        <%= f.fields_for :user_extra do |extra| %>
+            <div class="field">
+              <%= extra.hidden_field :renren_url, :class=>"textfield" %>
+            </div>
+        <% end %>
+
+        <div class="field">
+          <%= f.label :current_password, "原密码", :class=>"title" %>
+          <%= f.password_field :current_password, :class=>"textvalue" %>
+          <div class="field_help">
+            需要您输入当前的“同享日程”密码以提高安全性。
+          </div>
+        </div>
+
+        <div class="field">
+          <%= f.label :password, "新密码", :class=>"title" %>
+          <%= f.password_field :password, :class=>"textvalue" %>
+          <div class="field_help">
+            若不修改密码，请把这里留空
+          </div>
+        </div>
+
+        <div class="field">
+          <%= f.label :password_confirmation, "确认新密码", :class=>"title" %>
+          <%= f.password_field :password_confirmation, :class=>"textvalue" %>
+          <div class="field_help">
+            若不修改密码，请把这里留空
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="title">&nbsp;</label>
+          <%= f.submit :submit, :value => "提交", :class => 'link1 commit_button' %>
+          <%= styled_button "取消", :back %>
+        </div>
+
+
+        <br/>
+        <div class="field" id="destroy_account">
+          <span class="field_help"><%= link_to "将我的帐号永久删除", registration_path(resource_name), :confirm => "你确定要永久删号吗？你在“同享日程”上创建的所有活动及其它任何数据都将无法恢复！", :method => :delete %></span>
+        </div>
     <% end %>
 
-    <div class="field">
-      <%= f.label :current_password, "原密码", :class=>"title" %>
-      <%= f.password_field :current_password, :class=>"textvalue" %>
-      <div class="field_help">
-        需要您输入当前的“同享日程”密码以提高安全性。
-      </div>
-    </div>
-
-    <div class="field">
-      <%= f.label :password, "新密码", :class=>"title" %>
-      <%= f.password_field :password, :class=>"textvalue" %>
-        <div class="field_help">
-          若不修改密码，请把这里留空
-        </div>
-    </div>
-
-    <div class="field">
-      <%= f.label :password_confirmation, "确认新密码", :class=>"title" %>
-      <%= f.password_field :password_confirmation, :class=>"textvalue" %>
-      <div class="field_help">
-        若不修改密码，请把这里留空
-      </div>
-    </div>
-
-    <div class="field">
-      <label class="title">&nbsp;</label>
-      <%= f.submit :submit, :value => "提交", :class => 'link1 commit_button' %>
-      <%= styled_button "取消", :back %>
-    </div>
-
-
-    <br/>
-    <div class="field" id="destroy_account">
-        <span class="field_help"><%= link_to "将我的帐号永久删除", registration_path(resource_name), :confirm => "你确定要永久删号吗？你在“同享日程”上创建的所有活动及其它任何数据都将无法恢复！", :method => :delete %></span>
-    </div>
-  <% end %>
-
-<% end  %>
+<% end %>

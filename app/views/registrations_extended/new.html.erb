@@ -1,65 +1,16 @@
 <%= content_box nil, "新用户注册" do %>
-  <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
-    <%= devise_error_messages_translated! %>
-    <fieldset>
-      <div class="field">
-        <%= label_for_login :employee_no%>
-        <%= text_field_for_login :employee_no%>
-      </div>
+    <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
+      <%= devise_error_messages! %>
 
-      <div class="field"><%= f.label :password, '"同享日程"密码', :class=>"title" %>
-        <%= f.password_field :password, :class=>"textvalue" %></div>
+      <p><%= f.label :email %><br />
+      <%= f.text_field :email %></p>
 
-      <div class="field"><%= f.label :password_confirmation, '确认密码', :class=>"title"  %>
-        <%= f.password_field :password_confirmation, :class=>"textvalue" %></div>
+      <p><%= f.label :password %><br />
+      <%= f.password_field :password %></p>
 
-      <div class="field">
-        <label class="title">&nbsp;&nbsp;</label>
-        <div class="field_help">
-          建议设置一个<span class="stressed">方便在手机上输入的密码</span>
-        </div>
-      </div>
-
-      <div class="field">
-        <label for="infopass" class="title">清华大学Info密码</label>
-        <%= password_field_tag "infopass", nil, :class=>"textvalue"%>
-      </div>
-
-      <div class="field">
-        <label class="title">&nbsp;&nbsp;</label>
-        <span class="stressed">为什么要提供Info密码？</span>
-        <div id="info_help">
-          <div class="field_help">
-            我们根据您的学号和Info密码来确认您的身份并自动获取您的姓名和课表。“同享日程”不会保存您的Info密码，也不会读取或保存除学号、姓名和课表以外的任何个人信息。
-          </div>
-        </div>
-      </div>
-      
-      <%#*<div class="field">%>
-        <%#*<label class="title">&nbsp;&nbsp;</label>%>
-      <%#=
-      link_to_function "更多登录方式（选填）", nil, :id => 'more_login_link' do |page|
-        page.visual_effect :toggle_blind, 'more_login', :duration => 0.5
-      end%>
-    <%#*</div>%>
-
-
-      <%#*<div id="more_login"%>
-          <%#= more_login_used? ? "" : 'style="display:none"'.html_safe%>
-           <%#*>%>
-        <%# resource[:email] = '' if defined?(resource) && nil_email_alias?(resource[:email]) %>
-        <%#*<div class="field">%>
-          <%#= f.label :email, '电子邮件', :class=>"title" %>
-          <%#= f.text_field :email, :class=>"textvalue" %>
-    <%#*</div>%>
-
-        <%#*<div class="field">%>
-          <%#= label_for_login :mobile %>
-          <%#= text_field_for_login :mobile %>
-    <%#*</div>%>
-      <%#*</div>%>
+      <p><%= f.label :password_confirmation %><br />
+      <%= f.password_field :password_confirmation %></p>
 
       <p><%= submit_button f, "user_new", "注册" %></p>
-    </fieldset>
   <% end %>
 <% end %>

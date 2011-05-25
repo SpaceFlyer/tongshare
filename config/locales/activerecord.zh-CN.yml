@@ -40,7 +40,8 @@ zh-CN:
     attributes:
       user:
         email: "电子邮件"
-        password: ""      #another trick
+        password: "密码"      #another trick
+        password_confirmation: "确认密码"
         login_value: ""   #just a trick
         current_password: "当前密码"
         user_extra:

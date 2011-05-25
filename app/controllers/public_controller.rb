@@ -97,14 +97,12 @@ class PublicController < ApplicationController
       if (params[:disable_escape] && params[:disable_escape] == 'true')
         format.xml do
           coder = coder = HTMLEntities.new
-          # Hack XML for Joey
-          xml_result = {}.to_xml#result.to_xml
+          xml_result = result.to_xml
           xml_result.gsub!(/&#\d+;/) { |m| coder.decode(m)}
           render :text => xml_result
         end
       else
-          # Hack XML for Joey
-        format.xml { render :xml => {} }
+        format.xml { render :xml => result }
       end
     end
   end

@@ -87,4 +87,18 @@ class ProfileController < ApplicationController
     @phone ||= '未填写'
   end
 
+  def validate
+    user = User.find(params[:user_id])
+    email = params[:email]
+    token = params[:token]
+    uid = user.user_identifier.find_by_login_type_and_login_value(UserIdentifier::TYPE_EMAIL, email)
+    if (uid.nil? || uid.confirm_token != token)
+      flash[:alert] = "验证失败"
+      return
+    end
+    uid.confirmed = true
+    uid.save!
+    flash[:notice] = "验证成功"
+    redirect_to "/"
+  end
 end

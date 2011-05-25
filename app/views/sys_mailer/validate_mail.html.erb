@@ -1,0 +1,2 @@
+<% link_address = "http://#{SITE}/profile/validate/#{@user_id}?email=#{URI.escape(@email)}&token=#{@token}&auth_token=#{@auth_token}" %>
+点<%= link_to "此链接", link_address %>通过您的邮箱地址验证：<%= link_address %>

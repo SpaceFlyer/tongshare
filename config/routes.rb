@@ -14,12 +14,15 @@ Tongshare::Application.routes.draw do
   get "profile/index"
   get "profile/show"
   get "profile/select"
+  match "profile/validate/:user_id" => "profile#validate"
 
   get "search/index"
   get "search/add_members"
   post "search/add_members"
   get "search/box"
   post "search/box"
+  get "search/public_events"
+  post "search/public_events"
   match "search/user/:keyword" => "search#user"
   match "search/location/:keyword" => "search#location"
   match "search/public_user/:keyword" => "search#public_user"
@@ -54,9 +57,12 @@ Tongshare::Application.routes.draw do
   post "thuauth/auth_with_xls_and_get_name"
 
   devise_for :users, :controllers => {
-    :registrations => "registrations_extended", 
-    :sessions => "sessions_extended",
-    :confirmations => "confirmations_extended"
+    :registrations => "registrations_extended",
+#    :sessions => "sessions_extended",
+#
+#
+#
+#:confirmations => "confirmations_extended"
     }
 
 #  resources :oauth_consumers do
