@@ -1,0 +1,40 @@
+<div id="profile_header">
+  <table>
+    <tr>
+      <td>
+        <%= user_badge(current_user) %>
+
+      </td>
+      <td class="detail">
+        <strong>Hi, <%= link_to current_user.friendly_name, '/users/edit' %></strong><br>
+        <ul>
+          <% if @num_friendship_bidirectional > 0 %>
+              <li>
+                您有<%= link_to @num_friendship_bidirectional.to_s + "个好友", url_for(:controller => :friendship, :action => :show, :type => :bidirectional) %>
+              </li>
+          <% else %>
+              <li>您在同享上暂时还没有好友，请在活动中申请加Ta为好友并等待Ta通过。</li>
+          <% end %>
+          <% if current_user.greeting_from.count > 0 %>
+              <li>
+                一共有<%= link_to current_user.greeting_from.count.to_s + "个活动参与者", '/greeting/index' %>
+                向你招呼，最近一个是在<%= I18n.l(current_user.greeting_from.last.created_at, :format => :long) %>
+              </li>
+          <% else %>
+              <li>暂时没有人给您打招呼，您可以在活动中主动给Ta打招呼，告诉Ta你和Ta一起参加该活动。</li>
+          <% end %>
+          <% if @next_three_instances.length > 0 %>
+              <li>接下来您有<%= link_to "#{@next_three_instances.length > 3 ? "大于3" : @next_three_instances.length.to_s}个活动", '/events'%>要参加。</li>
+          <% else %>
+              <li>没什么活动了？请<%= link_to '创建一个活动', '/events/new' %>或者搜索一个您感兴趣的活动参加。</li>
+          <% end %>
+          <% if @num_friendship_from - @num_friendship_bidirectional > 0 %>
+              <li>
+                <%= link_to "有" + (@num_friendship_from-@num_friendship_bidirectional).to_s + "个人想加你为好友。", url_for(:controller => :friendship, :action => :show, :type => :only_from) %>
+              </li>
+          <% end %>
+        </ul>
+      </td>
+    </tr>
+  </table>
+</div>

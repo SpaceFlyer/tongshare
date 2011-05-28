@@ -57,6 +57,8 @@ class AcceptanceController < ApplicationController
     end
     flash[:notice] = I18n.t 'tongshare.acceptance.accepted', :name => event.name
     redirect_to event
+
+    News.create!(:user_id => current_user.id, :action => News::ACTION_JOIN, :target_event_id => acc.event_id)
   end
 
   def deny
@@ -111,6 +113,8 @@ class AcceptanceController < ApplicationController
     authorize! :exit, acc
     acc.decision = false
     acc.save!
+
+    News.create!(:user_id => current_user.id, :action => News::ACTION_QUIT, :target_event_id => acc.event_id)
 
 #    mail = SysMailer.accept_or_deny_sharing_email(acc)
 #    mail.deliver if !mail.nil?

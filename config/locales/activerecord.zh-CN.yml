@@ -45,7 +45,7 @@ zh-CN:
         login_value: ""   #just a trick
         current_password: "当前密码"
         user_extra:
-          renren_id: "人人网个人主页"
+          renren_id: "人人主页"
 
       user_identifier:
         login_value: "登录名"
@@ -66,4 +66,4 @@ zh-CN:
         shared_from: "来自"
         extra_info: "邀请说明"
       user_extra:
-        renren_url: "人人网个人主页"
+        renren_url: "人人主页"

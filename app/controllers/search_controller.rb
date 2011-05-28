@@ -10,7 +10,7 @@ class SearchController < ApplicationController
 
   def add_members
     authenticate_user!
-    
+
     begin_time = Time.parse(params[:begin])
     end_time = Time.parse(params[:end])
 
@@ -60,7 +60,7 @@ class SearchController < ApplicationController
         rescue Exception
           name = item[:login_value]
         end
-        data_entry = {:id => ui.user_id, :name => name, :conflict => []}  #do not expose user_friendly_name or attackers can enumerate 学号/姓名 pair by add sharings.
+        data_entry = {:id => ui.user_id, :name => name, :conflict => []} #do not expose user_friendly_name or attackers can enumerate 学号/姓名 pair by add sharings.
 
         #check time conflict
         user_instances = query_all_accepted_instance_includes_event(begin_time, end_time, ui.user_id)
@@ -112,13 +112,13 @@ class SearchController < ApplicationController
     authenticate_user!
     keyword = params[:keyword].downcase
     @offset = params[:offset] ? params[:offset].to_i : 0
-    @users = UserExtra.find(:all, :conditions => ['lower(name)=?', keyword], :offset => @offset, :limit => 10+1, :include => :user).map{ |ue| ue.user }
+    @users = UserExtra.find(:all, :conditions => ['lower(name)=?', keyword], :offset => @offset, :limit => 10+1, :include => :user).map { |ue| ue.user }
   end
 
   def location
     keyword = params[:keyword].downcase
     @offset = params[:offset] ? params[:offset].to_i : 0
-    @locations = Location.find(:all, :conditions => ['lower(name) LIKE ?', "\%#{keyword}\%"], :offset => @offset, :limit => 10+1).map{ |loc| loc.name }
+    @locations = Location.find(:all, :conditions => ['lower(name) LIKE ?', "\%#{keyword}\%"], :offset => @offset, :limit => 10+1).map { |loc| loc.name }
     @snapshots = {}
     for location in @locations
       @snapshots[location] = query_next_location_instance_includes_event(Time.now, 3, location, 0)
@@ -128,7 +128,7 @@ class SearchController < ApplicationController
   def public_user
     keyword = params[:keyword].downcase
     @offset = params[:offset] ? params[:offset].to_i : 0
-    @public_users = UserExtra.find(:all, :conditions => ['public=? AND lower(name) LIKE ?', true, "\%#{keyword}\%"], :offset => @offset, :limit => 10+1, :include => :user).map{ |ue| ue.user }
+    @public_users = UserExtra.find(:all, :conditions => ['public=? AND lower(name) LIKE ?', true, "\%#{keyword}\%"], :offset => @offset, :limit => 10+1, :include => :user).map { |ue| ue.user }
     @snapshots = {}
     for public_user in @public_users
       @snapshots[public_user.id] = query_next_accepted_instance_includes_event(Time.now, 3, public_user.id, 0)
@@ -145,8 +145,32 @@ class SearchController < ApplicationController
     end
   end
 
-  def public_events
+  PARAM_KEYS = ['events.name', 'events.location', 'user_extras.city', 'user_extras.org', 'user_extras.department']
 
+  def public_events
+    @param = params
+    SearchHistory.create!(:user_id => current_user.id, :param => @param) if current_user
+    condition = "events.share_token = ? AND events.begin <= ? AND events.end >= ?"
+    args = [Event::PUBLIC_TOKEN, Time.parse(@param[:end]).utc, Time.parse(@param[:begin]).utc]
+    for key in PARAM_KEYS
+      if (@param[key] && !@param[key].blank?)
+        condition << " AND "+key+" LIKE ?"
+        args << "%#{@param[key]}%"
+      end
+    end
+    if (@param['user_extras.gender'] == "male" || @param['user_extras.gender'] == "female")
+      condition << " AND user_extras.gender = ?"
+      args << @param['user_extras.gender']
+    end
+    if (@param[:must_have_avatar] == 'true')
+      condition << 'AND user_extras.photo_url IS NOT NULL AND user_extras.photo_url <> ""'
+    end
+    if (@param[:must_have_renren] == 'true')
+      condition << ' AND user_extras.renren_id IS NOT NULL AND user_extras.renren_id <> ""'
+    end
+    @offset = @param[:offset] ? @param[:offset].to_i : 0
+    @events = Event.all(:include => {:creator => :user_extra}, :conditions => ([condition] + args),
+               :offset => @offset, :limit => 10+1, :order => 'events.begin, events.end')
   end
 
 end

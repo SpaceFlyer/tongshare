@@ -1,209 +1,111 @@
 <%= javascript_include_tag "event.js" %>
-<%= content_box "查看", "活动" do%>
+<%= content_box "" do %>
 
-  <%= div_for @event, :class => "show" do %>
-    <div class="event name">
-    <%= @event.name %> &nbsp;
-    <% if @instance && @current_score > 0 %>
-    <% for i in 1..@current_score.round %>
-      ★
-    <% end %>
-    <% for i in @current_score.round+1..5 %>
-      ☆
-    <% end %>
-    <% end %>
-    </div>
-    <div class="event creator">由<%= @event.creator.friendly_name %>创建</div>
-    <% if @instance && @total_count && @check_in_count %>
-    <div class="instance check_in_percentage">
-      <%= sprintf("共有%.1f%%的参与者报到", @check_in_count.to_f * 100 / @total_count) %>
-    </div>
-    <%end%>
-    <% if @warning_count && @warning_count > 0 %>
-    <div class="instance warning">
-      <%=  sprintf("共有%.1f%%的参与者报警", @warning_reliability * 100) %>
-      <%= sprintf("(包括你在内)") if @warninged  %>
-    </div>
+    <%= div_for @event, :class => "show" do %>
+
+        <%= event_header(@event, true, false) %>
+
     <% end %>
 
-    <% if @event.recurring? %>
-      <div class="event time">
-        <% if @instance.nil? %>
-          <%= friendly_time_range @event.begin, @event.end %>
-        <% else %>
-          <%= friendly_time_range @instance.begin, @instance.end  %>
-        <% end %>
-      </div>
-      <div class="event rrule">
-        重复：
-        <%= "从#{l @event.begin, :format => :date_only}开始，" unless (@instance.nil? || @event.begin == @instance.begin) %>
-        <%=  show_friendly_rrule(@event) %>
-      </div>
-    <% else %>
-      <%= friendly_time_range @event.begin, @event.end %>
-    <% end %>
-
-    <div class="event location">地点：<%= @event.location.blank? ? "（未指定）" : @event.location %></div>
-    <div class="event extra">
-      <%= @event.extra_info %>
-    </div>
-
-    <br/>
-    <% if @instance %>
-    <div class="instance score">
-    给本次活动评分：
-    <% for i in 1..@my_score %>
-      <%= link_to '★', event_path(@event, :inst => @instance.id, :feedback => Feedback::SCORE+"."+i.to_s) %>
-    <% end %>
-    <% for i in @my_score+1..5 %>
-      <%= link_to '☆', event_path(@event, :inst => @instance.id, :feedback => Feedback::SCORE+"."+i.to_s) %>
-    <% end %>
-    <br/>
-    <%= sprintf("（评分指您对本次活动的气氛、收获等满意度；本次活动共有%.1f%%的用户打分；你%s打分）", @score_reliability * 100, @scored ? "已经" : "尚未") %>
-    </div>
-    <br/>
-    <% end %>
-
-    <% if @instance %>
-      <ul>
-        <li>(报到指你到场参加了该活动，已经报到的人将不会收到报警邮件；同享日程只统计百分比，保证不会将具体的报到信息透露给任何人)</li>
-        <li><%= "(报警指这节课有点名、小测。同享日程提醒您，请按时上课，不要迟到、早退或旷课)" if @event.creator_id == 1 %></li>
-      </ul>
-    <% end %>
-    <div class="event buttons">
-      <% if @acceptance.nil? && @event.creator_id != current_user.id && (@token || @event.public?) %>
-      <div class="event buttons">
-        <%= styled_button "参加该活动", {:controller => "acceptance", :action => "accept", :event => @event.id, :share_token => @token} %>
-        <%= styled_button "拒绝该活动", {:controller => "acceptance", :action => "deny", :event => @event.id, :share_token => @token} %>
-      </div>
-      <% end %>
-      <%= styled_button "编辑", edit_event_path(@event) if can? :edit, @event %>
-      <%= styled_button "删除", @event, :method => "delete",
-        :confirm => ("你确实要删除\"#{@event.name}\"吗？" + (@event.recurring? ? "这是一个重复的事件，所有重复项都会被删除！" : "")) \
-         if can? :destroy, @event %>
-      <%=  styled_button "报到", event_path(@event, :inst => @instance.id, :feedback => Feedback::CHECK_IN), 
-                          :title=>"报到指你到场参加了该活动，已经报到的人将不会收到报警邮件；同享日程只统计百分比，保证不会将具体的报到信息透露给任何人" \
-                          if @instance && !@checked_in %>
-      <%=  styled_button "取消报到", event_path(@event, :inst => @instance.id, :feedback => Feedback::CHECK_OUT) if @instance && @checked_in %>
-      <% if @can_warn %>
-      <%= styled_button "报警", event_path(@event, :inst => @instance.id, :feedback => Feedback::WARNING),
-                          :title => "报警指该节课有点名、小测。同享日程提醒您，请按时上课，不要迟到、早退或旷课" \
-                          if @instance && !@warninged %>
-      <%= styled_button "取消报警", event_path(@event, :inst => @instance.id, :feedback => Feedback::DISABLE_WARNING) if @instance && @warninged %>
-      <% end %>
-      <% acc = find_acceptance(@event) %>
-      <%= styled_button "退出活动", {:controller => "acceptance", :action => "exit", :id => acc.id}, :confirm => "确实要退出该活动吗？",
-                          :title => "从此活动中退出。如果此活动是你的课程，则“退出活动”适用于你计划中期退课等情况" \
-                          if can? :exit, acc%>
-      <%= styled_button "分享", {:controller => "sharings", :action => "new", :event_id => @event.id}, 
-                          :title => "邀请其他人来参加此活动" \
-                          if can? :share, @event %>
-    </div>
-
-  <%end%>
-
-<%end%>
+<% end %>
 
 <% unless @invited_feedbacks.nil? %>
-  <%= content_box "受邀者", "反馈", true do %>
-    <div class="event feedback">
-      <div class="statistic">
-        您发出的邀请共有<%= @invited_feedbacks[:counter][:accepted] %>人接受，
-        <%= @invited_feedbacks[:counter][:rejected] %>人拒绝，
-        <%= @invited_feedbacks[:counter][:undecided] %>人尚未回复。
-      </div>
-      <br/>
-      <ul>
-        <% for feedback in @invited_feedbacks[:data] %>
-        <li>
-           <%= feedback[:user].friendly_name %>：
-             <% if feedback[:decision].nil? %>
-                未定
-             <% elsif feedback[:decision] == true %>
-                接受
-             <% else %>
-                拒绝
-             <% end %>
-        </li>
-        <% end %>
-      </ul>
-    </div>
+    <%= content_box "受邀者", "反馈", true do %>
+        <div class="event feedback">
+          <div class="statistic">
+            您发出的邀请共有<%= @invited_feedbacks[:counter][:accepted] %>人接受，
+            <%= @invited_feedbacks[:counter][:rejected] %>人拒绝，
+            <%= @invited_feedbacks[:counter][:undecided] %>人尚未回复。
+          </div>
+          <br/>
+          <ul>
+            <% for feedback in @invited_feedbacks[:data] %>
+                <li>
+                  <%= feedback[:user].friendly_name %>：
+                  <% if feedback[:decision].nil? %>
+                      未定
+                  <% elsif feedback[:decision] == true %>
+                      接受
+                  <% else %>
+                      拒绝
+                  <% end %>
+                </li>
+            <% end %>
+          </ul>
+        </div>
 
-    <br/>
-    <p>您可以将下面的文字直接通过短信、飞信等形式群发给受邀请者<br/>
-    <%= link_to "展开/关闭邀请模板", "javascript: hide_or_show('invitation_message')" %></p>
-    <div id ="invitation_message" class="invitation_message">
-      <p><%= @current_user.friendly_name %>邀请你参加活动“<%= @event.name %>”
-      </p>
+        <br/>
+        <p>您可以将下面的文字直接通过短信、飞信等形式群发给受邀请者<br/>
+          <%= link_to "展开/关闭邀请模板", "javascript: hide_or_show('invitation_message')" %></p>
+        <div id="invitation_message" class="invitation_message">
+          <p><%= @current_user.friendly_name %>邀请你参加活动“<%= @event.name %>”
+          </p>
 
-      <p>
-      时间：<%= @friendly_time_range %>
+          <p>
+            时间：<%= @friendly_time_range %>
 
-      <% if @event.recurring? %>
-      <br/>重复：<%=  show_friendly_rrule(@event) %>
-      <% end %>
+            <% if @event.recurring? %>
+                <br/>重复：<%= show_friendly_rrule(@event) %>
+            <% end %>
 
-      <%if !@event.location.blank?%>
-      <br/>地点：<%= @event.location %>
-      <%end%>
+            <% if !@event.location.blank? %>
+                <br/>地点：<%= @event.location %>
+            <% end %>
 
-      <%if !@event.extra_info.blank? %>
-      <br/><%=  @event.extra_info%>
-      <%end%>
-      <br/>[本信息由"同享日程"自动生成，它可以<%= rand_function_description %>]
-      </p>
+            <% if !@event.extra_info.blank? %>
+                <br/><%= @event.extra_info %>
+            <% end %>
+            <br/>[本信息由"同享日程"自动生成，它可以<%= rand_function_description %>]
+          </p>
 
-      <p>查看更多活动信息并对该邀请进行回复，请进入链接：<br/><%= "http://" + SITE + event_path(@event) + "?share_token=" + @event.get_or_create_share_token %></p>
-    </div>
+          <p>查看更多活动信息并对该邀请进行回复，请进入链接：<br/><%= "http://" + SITE + event_path(@event) + "?share_token=" + @event.get_or_create_share_token %>
+          </p>
+        </div>
 
-  <% end %>
+    <% end %>
 <% end %>
 
 <% unless @sharings.empty? %>
-  <br/>
-  <%= content_box "邀请你", "参加", true do %>
-    <div class="event sharings">
-      以下用户邀请你参加此活动：
-      <ul>
-        <% for sharing in @sharings %>
-          <li>
-            <div class="name"><%=sharing.user.friendly_name%></div>
-            <% unless sharing.extra_info.blank?  %>
-              <div class="quote">“<%= sharing.extra_info %>“</div>
-            <% end %>
-          </li>
-        <% end %>
-      </ul>
-      <br/>
-      <% if @acceptance.nil? && @token.nil? %>
-      <div class="event buttons">
-        <%= styled_button "接受邀请", {:controller => "acceptance", :action => "accept", :id => sharing.id} %>
-        <%= styled_button "拒绝邀请", {:controller => "acceptance", :action => "deny", :id => sharing.id} %>
-      </div>
-      <% elsif @acceptance && @acceptance.decision == true %>
-        （你已经接受了这些邀请）
-      <% elsif @acceptance && @acceptance.decision == false %>
-        （你已经拒绝了这些邀请）
-      <% end %>
-    </div>
-  <% end %>
-<%end%>
     <br/>
+    <%= content_box "邀请你", "参加", true do %>
+        <div class="event sharings">
+          以下用户邀请你参加此活动：
+          <ul>
+            <% for sharing in @sharings %>
+                <li>
+                  <div class="name"><%= sharing.user.friendly_name %></div>
+                  <% unless sharing.extra_info.blank? %>
+                      <div class="quote">“<%= sharing.extra_info %>“</div>
+                  <% end %>
+                </li>
+            <% end %>
+          </ul>
+          <br/>
+          <% if @acceptance.nil? && @token.nil? %>
+              <div class="event buttons">
+                <%= styled_button "接受邀请", {:controller => "acceptance", :action => "accept", :id => sharing.id} %>
+                <%= styled_button "拒绝邀请", {:controller => "acceptance", :action => "deny", :id => sharing.id} %>
+              </div>
+          <% elsif @acceptance && @acceptance.decision == true %>
+              （你已经接受了这些邀请）
+          <% elsif @acceptance && @acceptance.decision == false %>
+              （你已经拒绝了这些邀请）
+          <% end %>
+        </div>
+    <% end %>
+<% end %>
+<br/>
 <% if !(attendees = get_attendees(@event, @attendee_offset, 10+1)).empty? %>
-  <%= content_box "活动", "参与者", true do %>
-    <div class="event attendee">
-      谁在和你一起参加该活动？我们已知的有<%= get_attendee_count(@event) %>人：
-      <table>
-        <% attendees[0...10].each do |att| %>
-            <% att.auto_check_profile %>
-            <%=  user_profile(att, nil, nil, nil, @event) %>
+    <%= content_box "活动", "参与者", true do %>
+        <div class="event attendee">
+          <% attendees[0...10].each do |att| %>
+              <%= user_profile(att, att == attendees[0...10].last) %>
+          <% end %>
+        </div>
+        <%= link_to('上一页', params.merge({:offset => @attendee_offset - 10})) if @attendee_offset >= 10 %>
+        <% if @attendee_offset >= 10 && attendees.count > 10 %>  &nbsp;&nbsp;
         <% end %>
-      </table>
-    </div>
-    <%=  link_to('上一页', params.merge({:offset => @attendee_offset - 10})) if @attendee_offset >= 10%>
-    <% if @attendee_offset >= 10 && attendees.count > 10%>  &nbsp;&nbsp; <% end %>
-    <%=  link_to('下一页', params.merge({:offset => @attendee_offset + 10})) if attendees.count > 10%>
-    <div>（仅显示已注册并通过验证的用户）</div>
-  <% end %>
+        <%= link_to('下一页', params.merge({:offset => @attendee_offset + 10})) if attendees.count > 10 %>
+    <% end %>
 <% end %>
 

@@ -1,4 +1,16 @@
-<%= render :partial => "shared/search"  %>
+<% if current_user %>
+    <div id="welcome">
+      <%= profile_header %>
+    </div>
+
+    <hr/>
+<% end %>
+
+<div id="motto">
+  <h2>活动是否有吸引力，并不只取决于活动的内容，更取决于时间以及活动的人！</h2>
+</div>
+
+<%= advanced_search_form %>
 
 <% content_for :aside do %>
 <% end %>

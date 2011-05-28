@@ -1,5 +1,16 @@
 zh-CN:
   tongshare:
+    gender:
+      male: 男
+      female: 女
+    action:
+      destroy: 删除了活动
+      join: 加入了活动
+      check: 查看了活动
+      profile: 修改了Ta的个人资料
+      create: 创建了活动
+      edit: 编辑了活动
+      quit: 退出了活动
     warning: "警报"
     feedback:
       invalid: "您的操作输入不合法"

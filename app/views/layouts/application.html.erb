@@ -47,7 +47,10 @@
         <nav>
           <ul class="fright">
             <% if user_signed_in? %>
-                <li><%= link_to(image_tag("logout-icon.png", :size => "28x28"), destroy_user_session_path, :title=>"注销") %></li>
+                <li class="item"><%= link_to(image_tag("logout-icon.png", :size => "28x28"), destroy_user_session_path, :title=>"注销", :class => 'item_link') %></li>
+            <% else %>
+                <li class="item"><%= link_to "登录", '/users/sign_in', :class => 'item_link' %></li>
+                <li class="item"><%= link_to "注册", '/users/sign_up', :class => 'item_link' %></li>
             <% end %>
           </ul>
           <ul class="hor_menu">
@@ -72,17 +75,17 @@
         </nav>
       </div>
       <% if not user_signed_in? %>
-          <div id="search_box_home">
-            <form name="search_box" action="/search/box">
-              <input id="search_input" type="text" name="keyword" value="找某地点、组织的日程"
-                     onclick="if(value==defaultValue)value=''" onblur="if(!value)value=defaultValue" onkeydown="if(value==defaultValue)value=''"></input>
-              <input id="search_button" class="link1 commit_button" type="submit" value="搜索" title='输入姓名查找用户；输入地点查找该地点的日程；输入公共用户查看其日程；输入共群群组名查看公共群组的日程'></input>
-            </form>
-            <!--<label>热门搜索:</label>-->
-            <!--<a href="/search/box?keyword=百年校庆">百年校庆</a>-->
-            <!--<a href="/search/box?keyword=大礼堂">大礼堂</a>-->
-            <!--<a href="/search/box?keyword=六教">六教</a>-->
-          </div>
+          <!--<div id="search_box_home">-->
+            <!--<form name="search_box" action="/search/box">-->
+              <!--<input id="search_input" type="text" name="keyword" value="直接输入人名、地点搜索"-->
+                     <!--onclick="if(value==defaultValue)value=''" onblur="if(!value)value=defaultValue" onkeydown="if(value==defaultValue)value=''"></input>-->
+              <!--<input id="search_button" class="link1 commit_button" type="submit" value="搜索"></input>-->
+            <!--</form>-->
+            <!--&lt;!&ndash;<label>热门搜索:</label>&ndash;&gt;-->
+            <!--&lt;!&ndash;<a href="/search/box?keyword=百年校庆">百年校庆</a>&ndash;&gt;-->
+            <!--&lt;!&ndash;<a href="/search/box?keyword=大礼堂">大礼堂</a>&ndash;&gt;-->
+            <!--&lt;!&ndash;<a href="/search/box?keyword=六教">六教</a>&ndash;&gt;-->
+          <!--</div>-->
       <% end %>
     </header>
 
@@ -104,26 +107,42 @@
           </td>
           <td id="aside_container" width="300px">
             <% if user_signed_in? %>
-                <div id="search_box">
-                  <form name="search_box" action="/search/box">
-                    <input id="search_input" type="text" name="keyword" value="直接输入人名、地点搜索"
-                           onclick="if(value==defaultValue)value=''" onblur="if(!value)value=defaultValue" onkeydown="if(value==defaultValue)value=''"></input>
-                    <input id="search_button" class="link1 commit_button" type="submit" value="搜索" title='输入姓名查找用户；输入地点查找该地点的日程；输入公共用户查看其日程；输入共群群组名查看公共群组的日程'></input>
-                  </form>
-                  <!--<label>热门搜索:</label>-->
-                  <!--<a href="/search/box?keyword=百年校庆">百年校庆</a>-->
-                  <!--<a href="/search/box?keyword=大礼堂">大礼堂</a>-->
-                  <!--<a href="/search/box?keyword=六教">六教</a>-->
-                </div>
+                <!--<div id="search_box">-->
+                  <!--<form name="search_box" action="/search/box">-->
+                    <!--<input id="search_input" type="text" name="keyword" value="直接输入人名、地点搜索"-->
+                           <!--onclick="if(value==defaultValue)value=''" onblur="if(!value)value=defaultValue" onkeydown="if(value==defaultValue)value=''"></input>-->
+                    <!--<input id="search_button" class="link1 commit_button" type="submit" value="搜索"></input>-->
+                  <!--</form>-->
+                  <!--&lt;!&ndash;<label>热门搜索:</label>&ndash;&gt;-->
+                  <!--&lt;!&ndash;<a href="/search/box?keyword=百年校庆">百年校庆</a>&ndash;&gt;-->
+                  <!--&lt;!&ndash;<a href="/search/box?keyword=大礼堂">大礼堂</a>&ndash;&gt;-->
+                  <!--&lt;!&ndash;<a href="/search/box?keyword=六教">六教</a>&ndash;&gt;-->
+                <!--</div>-->
             <% end %>
-            <% if not user_signed_in? %>
-                <div id="login_container" class="inside">
-                  <h2>登录</h2>
-                  <%= render(:partial => "sessions_extended/login_form", :locals => {:small => true}) %>
-                  <br>
+            <%#= yield :aside %>
+
+            <!--render news-->
+            <div id="sidebar_ann">
+              <div class="sideFrame">
+                <p class="subtitle">新鲜事：</p>
+
+                <div id="news">
+                  <% @news = News.all(:limit => 10, :order => "created_at DESC") %>
+                  <% for thread in @news %>
+                      <div class="news_thread">
+                        <%= user_badge(thread.user) %>
+                        <%= news_detail(thread) %>
+                        <div class="clear_line">
+                          <% if thread != @news.last %>
+                              <hr size="1px" width="90%"/>
+                          <% end %>
+                        </div>
+                      </div>
+                  <% end %>
                 </div>
-            <% end %>
-            <%= yield :aside %>
+              </div>
+            </div>
+
             <div id="mobile_tip">
               手机访问：<a href="http://m.tongshare.com">tongshare.com</a> 更省流量<br/>
               <!--

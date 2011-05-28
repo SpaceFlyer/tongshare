@@ -92,6 +92,15 @@ HTML
     content.html_safe
   end
 
+  def profile_header
+    @num_friendship_from = current_user.friendship_from.count
+    @num_friendship_bidirectional = current_user.friendship_from.where('property=?', Friendship::BIDIRECTIONAL).count
+    @invited_user_sharings = query_sharing_event
+    @photo_url = current_user.user_extra.photo_url
+    @next_three_instances = query_next_accepted_instance_includes_event(Time.now, 3 + 1, current_user.id, 0)
+    render :partial => 'shared/profile_header'
+  end
+
   def header_announcement
     #check confirmation for employee_no
     user_id_rec = current_user.user_identifier.find(:first,
@@ -114,30 +123,18 @@ HTML
     render :partial=>"shared/sidebar_announcement"
   end
 
-  def user_profile(user, renren_url = nil, photo_url = nil, department = nil, event = nil)
-    @event = event
+  def user_profile(user, is_last_one)
+    @is_last_one = is_last_one
     @name = user.friendly_name
     @user = user
     @renren_url = nil
     @photo_url = nil
     @department = nil
-    if (renren_url && photo_url && department)
-      @renren_url = renren_url
-      @photo_url = photo_url
-      @department = department
-      @can_be_selected = true
-    elsif (user.public?)
-      @department = user.user_extra.department if (user.user_extra)
-      @photo_url = user.user_extra.photo_url if (user.user_extra)
-    else
-      @renren_id = user.user_extra.renren_id if (user.user_extra && (!user.user_extra.hide_profile || user.id == current_user.id))
-      @renren_url = user.user_extra.renren_url if (user.user_extra && (!user.user_extra.hide_profile || user.id == current_user.id))
-      @photo_url = user.user_extra.photo_url if (user.user_extra && (!user.user_extra.hide_profile || user.id == current_user.id))
-      @department = user.user_extra.department if (user.user_extra && (!user.user_extra.hide_profile || user.id == current_user.id))
-      @unconfirmed = (@renren_url && @photo_url && user.user_extra.profile_status != User::PROFILE_CONFIRMED)
-      @friendship_to = current_user.friendship_to.find_by_to_user_id(user.id)
-      @friendship_from = current_user.friendship_from.find_by_from_user_id(user.id)
-    end
+    @renren_id = user.user_extra.renren_id if (user.user_extra && (!user.user_extra.hide_profile || user.id == current_user.id))
+    @renren_url = user.user_extra.renren_url if (user.user_extra && (!user.user_extra.hide_profile || user.id == current_user.id))
+    @photo_url = user.user_extra.photo_url if (user.user_extra && (!user.user_extra.hide_profile || user.id == current_user.id))
+    @friendship_to = current_user.friendship_to.find_by_to_user_id(user.id)
+    @friendship_from = current_user.friendship_from.find_by_from_user_id(user.id)
 
     render :partial => 'shared/user_profile'
   end
@@ -198,6 +195,42 @@ HTML
 
     @only_public = true
     render :partial => 'shared/agenda'
+  end
+
+  def advanced_search_form
+    @last_search = SearchHistory.get_last(current_user.id) if current_user
+    @last_search = @last_search.param if @last_search
+    render :partial => 'shared/search'
+  end
+
+  def user_badge(user)
+    #TODO iTongShare rating stars
+    @user = user
+    @friendly_name = user.friendly_name
+    @photo_url = user.user_extra.photo_url if user.user_extra
+
+    render :partial => 'shared/user_badge'
+  end
+
+  def news_detail(thread)
+    @friendly_name = thread.user.friendly_name
+    @user = thread.user
+    @friendly_time = friendly_time_range(thread.created_at)
+    @event = thread.target_event
+    @removed_event_name = thread.action == News::ACTION_DESTROY ? RemovedEvent.find_by_event_id(thread.target_event_id).name : nil
+    @action = I18n.t('tongshare.action.'+thread.action)
+    render :partial => 'shared/news_detail'
+  end
+
+  def event_header(event, disable_link = false, is_last_one = false)
+    @participants_count = Acceptance.count(:conditions => ["event_id=? AND decision=?", event.id, Acceptance::DECISION_ACCEPTED])
+    @check_count = News.count(:conditions => ["action=? AND target_event_id=?", News::ACTION_CHECK, event.id])
+    @event = event
+    @dates_for_google = (@event.begin.utc.strftime("%Y%m%dT%H%M00Z")) + "/" + (@event.end ? @event.end.utc.strftime("%Y%m%dT%H%M00Z") : @even.begin.utc.strftime("%Y%m%dT%H%M00Z"))
+    @friendly_time = friendly_time_range(event.begin, event.end)
+    @disable_link = disable_link
+    @is_last_one = is_last_one
+    render :partial => 'shared/event_header'
   end
 
 end

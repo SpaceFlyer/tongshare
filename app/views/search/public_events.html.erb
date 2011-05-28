@@ -1,0 +1,31 @@
+<%= content_box "搜索结果" do %>
+<div class="agenda_list">
+  <!--<div class="agenda_panel">-->
+    <% if @events.length == 0 %>
+        <h2>没有搜索到任何活动</h2>
+    <% end %>
+    <% for event in @events[0...10] %>
+        <%= event_header(event) %>
+    <% end %>
+    <div class="agenda_pannel">
+      <ul>
+        <li>
+          <% if @offset > 0 %>
+              <%= link_to "上一页", @param.merge(:offset => [0, @offset-10].max) %>
+          <% else %>
+              没有上一页了
+          <% end %>
+        </li>
+        |
+        <li>
+          <% if @events.length > 10 %>
+              <%= link_to "下一页", @param.merge(:offset => @offset+10) %>
+          <% else %>
+              没有下一页了
+          <% end %>
+        </li>
+      </ul>
+    </div>
+  <!--</div>-->
+</div>
+<% end %>

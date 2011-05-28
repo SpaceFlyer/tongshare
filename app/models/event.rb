@@ -36,7 +36,7 @@ class Event < ActiveRecord::Base
   before_destroy :set_removed_event
 
   def set_removed_event
-    RemovedEvent.create!(:event_id => self.id, :creator_id => self.creator_id)
+    RemovedEvent.create!(:event_id => self.id, :creator_id => self.creator_id, :name => self.name)
   end
 
   include SharingsHelper

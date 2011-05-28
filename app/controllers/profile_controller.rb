@@ -73,7 +73,7 @@ class ProfileController < ApplicationController
 
   def show
     @target_user = User.find(params[:target_user])
-    authorize! :show, @target_user
+#    authorize! :show, @target_user
     @email = @target_user.email if @target_user.has_valid_email
     @photo_url = @target_user.user_extra.photo_url
     @renren_url = @target_user.user_extra.renren_url

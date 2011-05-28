@@ -1,76 +1,77 @@
-<%= content_box nil, "高级搜索" do %>
-    <form accept-charset="UTF-8" action="/search/public_events" class="search" id="event_form" method="post">
+<%= content_box nil, "" do %>
+    <%= form_tag "search/public_events" do %>
       <fieldset id="event_filter">
         <div class="field_left">
           <label class="title">搜索开始时间</label>
-          <%= calendar_date_select_tag :begin, Time.now, :minute_interval => 1, :time => true, :onchange => 'on_change_begin("begin", "end")' %>
+          <%= calendar_date_select_tag :begin, @last_search ? @last_search[:begin] : Time.now, :minute_interval => 1, :time => true %>
         </div>
 
         <div class="field_right">
           <label for="begin" class="title">搜索结束时间</label>
-          <%= calendar_date_select_tag :end, Time.now+1.day, :minute_interval => 1, :time => true, :onchange => 'on_change_end("begin", "end")' %>
+          <%= calendar_date_select_tag :end, @last_search ? @last_search[:end] : Time.now+1.day, :minute_interval => 1, :time => true %>
         </div>
 
+        <!--initialize time range-->
         <script type="text/javascript">
-            period = 24 * 3600 * 1000 //default for 1 day
+            on_change_end("begin", "end")
         </script>
 
         <div class="field_left">
           <label class="title">活动名包含</label>
-          <input type="text" id="event_title" name="event_title"/>
+          <input type="text" id="events.name" name="events.name" <%= @last_search? "value='#{@last_search['events.name']}'" : '' %>/>
         </div>
 
         <div class="field_right">
           <label class="title">地点包含</label>
-          <input type="text" id="location" name="location"/>
+          <input type="text" id="events.location" name="events.location" <%= @last_search? "value='#{@last_search['events.location']}'" : '' %>/>
         </div>
       </fieldset>
 
       <fieldset id="creator_filter">
         <div class="field_left">
           <label class="title">创建者城市</label>
-          <input type="text" id="creator_city" name="event_city"/>
+          <input type="text" id="user_extras.city" name="user_extras.city" <%= @last_search? "value='#{@last_search['user_extras.city']}'" : '' %>/>
         </div>
 
         <div class="field_right">
           <label class="title">创建者学校/单位</label>
-          <input type="text" id="creator_org" name="creator_org"/>
+          <input type="text" id="user_extras.org" name="user_extras.org" <%= @last_search? "value='#{@last_search['user_extras.org']}'" : '' %>/>
         </div>
 
         <div class="field_left">
           <label class="title">创建者院系/部门</label>
-          <input type="text" id="creator_department" name="creator_department"/>
+          <input type="text" id="user_extras.department" name="user_extras.department" <%= @last_search? "value='#{@last_search['user_extras.department']}'" : '' %>/>
         </div>
 
         <div class="field_right">
           <label class="title">创建者性别</label>
-          <select name="gender">
-            <option value="all">任意</option>
-            <option value="male">男</option>
-            <option value="female">女</option>
+          <select name="user_extras.gender">
+            <option value="all" <%= @last_search && @last_search['user_extras.gender'] == 'all' ? "selected='selected'" : '' %>>任意</option>
+            <option value="male" <%= @last_search && @last_search['user_extras.gender'] == 'male' ? "selected='selected'" : '' %>>男</option>
+            <option value="female" <%= @last_search && @last_search['user_extras.gender'] == 'female' ? "selected='selected'" : '' %>>女</option>
           </select>
         </div>
 
         <div class="field_left">
           <label class="title">&nbsp;</label>
-          <input type="checkbox" id="must_have_avatar" name="must_have_avatar" value="true"/>创建者必须有头像
+          <input type="checkbox" id="must_have_avatar" name="must_have_avatar" value="true" <%= @last_search && @last_search['must_have_avatar'] == 'true' ? "checked='yes'" : '' %>/>创建者必须有头像
         </div>
 
         <div class="field_right">
           <label class="title">&nbsp;</label>
-          <input type="checkbox" id="must_have_renren" name="must_have_renren" value="true"/>创建者必须有人人主页
+          <input type="checkbox" id="must_have_renren" name="must_have_renren" value="true" <%= @last_search && @last_search['must_have_renren'] == 'true' ? "checked='yes'" : '' %>/>创建者必须有人人主页
         </div>
 
       </fieldset>
 
       <!--<div class="field_left">-->
       <div align="center">
-        <input id="search_event_button" type="submit" name="search_event" value="查询活动"/>
+        <input id="search_event_button" type="submit" name="search_event" value="搜索活动"/>
       </div>
       <!--</div>-->
       <!--<div class="field_right">-->
         <!--<input class="link1 commit_button" type="submit" name="search_creator" value="查询活动创建者"/>-->
       <!--</div>-->
 
-    </form>
+    <% end %>
 <% end %>

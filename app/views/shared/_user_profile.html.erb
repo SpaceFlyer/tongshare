@@ -3,55 +3,146 @@
 # and open the template in the editor.
 %>
 
-<tr><td>
-  <table class="user_profile"><tr>
-  <td><%= image_tag( ((@photo_url.nil? || @photo_url.blank?) ? 'default.jpg' : @photo_url), :onError => "this.src='/images/default.jpg';" ) %></td>
-  <td>
-    <dl>
-      <dt>
-        <% if @user.public? %>
-          <%= link_to @name, '/public/user/'+@user.id.to_s, :class => "title_name" %>
-        <% else %>
-          <%=@name%>
-          <% unless (@renren_url.nil? || @renren_url.blank?) %>
-            <%= link_to @renren_url, :target=>"_blank", :title=>"访问#{@name}的人人网个人主页" do %>
-              <%= image_tag 'renren.png'%>
-            <% end %>
-            <% if @unconfirmed %>
-              <% notice = '人人链接旁边的（？）表示同享日程显示的人人链接并没有得到其本人的确认，但是同享日程觉得这很有可能就是其本人的人人链接' %>
-              <%= link_to '（?）', request.request_uri + (request.request_uri.include?('?') ? '&' : '?') + 'notice=' + notice, :title => notice %>
-            <% end %>
-          <% else %>
-            &nbsp;
-          <% end %>
-        <% end %>
-      </dt>
-      <% if @department && !@department.blank? %>
-      <dl><%= @department %></dl>
-      <% end %>
-    <% if @can_be_selected %>
-      <dl>
-      <%=  link_to "这是我的人人链接", url_for(:controller => :profile, :action => :select, :renren_url => @renren_url, :department => @department, :photo_url => @photo_url) %>
-      </dl>
-    <% elsif (current_user && @user.id != current_user.id) %>
-      <% if @event %>
-      <dl>
-        <%= link_to '打个招呼，Hi~', url_for(:controller => :greeting, :action => :create, :target_user => @user.id, :event_id => @event.id) %>
-      </dl>
-      <% end %>
-      <dl>
-        <%= '你已申请加Ta为好友' if @friendship_to && !@friendship_from%>
-        <%= link_to '查看该好友的更多信息', url_for(:controller => :profile, :action => :show, :target_user => @user.id) if @friendship_from && @friendship_to %>
-        <%=  link_to "申请加为好友", url_for(:controller => :friendship, :action => :add_or_remove, :target_user => @user.id) if !@friendship_to && !@friendship_from%>
-        <%=  link_to "同意Ta成为你的好友", url_for(:controller => :friendship, :action => :add_or_remove, :target_user => @user.id) if !@friendship_to && @friendship_from%>
-      </dl>
-      <% if @friendship_to %>
-      <dl>
-        <%=  link_to "删除好友", url_for(:controller => :friendship, :action => :add_or_remove, :target_user => @user.id)%>
-      </dl>
-      <% end %>
+<div class="user_profile">
+  <%= user_badge(@user) %>
+  <div class="user_detail">
+    <div class="field">
+      <label class="title">电子邮箱</label>
+      <%= @user.email %>
+    </div>
+    <div class="field">
+      <label class="title">性别</label>
+      <%= I18n.t("tongshare.gender.#{@user.user_extra.gender}") %>
+    </div>
+
+    <% if !@user.user_extra.city.blank? %>
+        <div class="field">
+          <label class="title">城市</label>
+          <%= @user.user_extra.city %>
+        </div>
     <% end %>
-    </dl>
-  </td>
-</tr></table>
-</td></tr>
+
+    <% if !@user.user_extra.org.blank? %>
+        <div class="field">
+          <label class="title">学校/单位</label>
+          <%= @user.user_extra.org %>
+        </div>
+    <% end %>
+
+    <% if !@user.user_extra.department.blank? %>
+        <div class="field">
+          <label class="title">院系/部门</label>
+          <%= @user.user_extra.department %>
+        </div>
+    <% end %>
+
+    <% if !@renren_url.blank? %>
+        <div class="field">
+          <label class="title">人人主页</label>
+          <%= link_to @renren_url, :target=>"_blank", :title=>"访问人人主页" do %>
+              <%= image_tag 'renren.png' %>
+          <% end %>
+        </div>
+    <% end %>
+
+    <% if !@user.user_extra.qq.blank? %>
+        <div class="field">
+          <label class="title">QQ号</label>
+          <%= @user.user_extra.qq %>
+        </div>
+    <% end %>
+
+    <% if !@user.user_extra.fetion.blank? %>
+        <div class="field">
+          <label class="title">飞信号</label>
+          <%= @user.user_extra.fetion %>
+        </div>
+    <% end %>
+
+    <% if !@user.user_extra.msn.blank? %>
+        <div class="field">
+          <label class="title">MSN</label>
+          <%= @user.user_extra.msn %>
+        </div>
+    <% end %>
+
+    <% if !@user.user_extra.gtalk.blank? %>
+        <div class="field">
+          <label class="title">GTalk</label>
+          <%= @user.user_extra.gtalk %>
+        </div>
+    <% end %>
+
+    <% validated_emails = @user.validated_emails %>
+    <% if !validated_emails.blank? %>
+        <div class="field">
+          <label class="title">已验证邮箱</label>
+          <div class="validated_emails">
+            <ul>
+              <% for email in validated_emails %>
+                  <li><%= email %></li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+    <% end %>
+  </div>
+  <% if !@is_last_one %>
+  <div class="clear_line">
+    <hr/>
+  </div>
+  <% end %>
+</div>
+
+    <table class="user_profile" style="display: none;">
+      <tr>
+        <td><%= image_tag(((@photo_url.nil? || @photo_url.blank?) ? 'default.jpg' : @photo_url), :onError => "this.src='/images/default.jpg';") %></td>
+        <td>
+          <dl>
+            <dt>
+              <% if @user.public? %>
+                  <%= link_to @name, '/public/user/'+@user.id.to_s, :class => "title_name" %>
+              <% else %>
+                  <%= @name %>
+                  <% unless (@renren_url.nil? || @renren_url.blank?) %>
+                      <%= link_to @renren_url, :target=>"_blank", :title=>"访问#{@name}的人人主页" do %>
+                          <%= image_tag 'renren.png' %>
+                      <% end %>
+                      <% if @unconfirmed %>
+                          <% notice = '人人链接旁边的（？）表示同享日程显示的人人链接并没有得到其本人的确认，但是同享日程觉得这很有可能就是其本人的人人链接' %>
+                          <%= link_to '（?）', request.request_uri + (request.request_uri.include?('?') ? '&' : '?') + 'notice=' + notice, :title => notice %>
+                      <% end %>
+                  <% else %>
+                      &nbsp;
+                  <% end %>
+              <% end %>
+            </dt>
+            <% if @department && !@department.blank? %>
+                <dl><%= @department %></dl>
+            <% end %>
+            <% if @can_be_selected %>
+                <dl>
+                  <%= link_to "这是我的人人链接", url_for(:controller => :profile, :action => :select, :renren_url => @renren_url, :department => @department, :photo_url => @photo_url) %>
+                </dl>
+            <% elsif (current_user && @user.id != current_user.id) %>
+                <% if @event %>
+                    <dl>
+                      <%= link_to '打个招呼，Hi~', url_for(:controller => :greeting, :action => :create, :target_user => @user.id, :event_id => @event.id) %>
+                    </dl>
+                <% end %>
+                <dl>
+                  <%= '你已申请加Ta为好友' if @friendship_to && !@friendship_from %>
+                  <%= link_to '查看该好友的更多信息', url_for(:controller => :profile, :action => :show, :target_user => @user.id) if @friendship_from && @friendship_to %>
+                  <%= link_to "申请加为好友", url_for(:controller => :friendship, :action => :add_or_remove, :target_user => @user.id) if !@friendship_to && !@friendship_from %>
+                  <%= link_to "同意Ta成为你的好友", url_for(:controller => :friendship, :action => :add_or_remove, :target_user => @user.id) if !@friendship_to && @friendship_from %>
+                </dl>
+                <% if @friendship_to %>
+                    <dl>
+                      <%= link_to "删除好友", url_for(:controller => :friendship, :action => :add_or_remove, :target_user => @user.id) %>
+                    </dl>
+                <% end %>
+            <% end %>
+          </dl>
+        </td>
+      </tr>
+    </table>

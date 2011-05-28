@@ -21,6 +21,11 @@
         一共有<%= link_to current_user.greeting_from.count.to_s + "个活动参与者", '/greeting/index' %> 向你招呼，最近一个是在<%= I18n.l(current_user.greeting_from.last.created_at, :format => :long) %>
       </li>
       <% end %>
+      <% if @num_friendship_from - @num_friendship_bidirectional > 0 %>
+      <li>
+        <%= link_to "有" + (@num_friendship_from-@num_friendship_bidirectional).to_s + "个人想加你为好友。", url_for(:controller => :friendship, :action => :show, :type => :only_from) %>
+      </li>
+      <% end %>
     </ul>
   </td>
 </tr></table>

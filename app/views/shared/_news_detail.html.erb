@@ -1,0 +1,15 @@
+<div class="thread_detail">
+  <%= @friendly_time %>
+  <br/>
+  <!--<p>-->
+  <%= link_to @friendly_name, "/profile/show?target_user=#{@user.id}" %>
+  <%= @action %>
+  <% if @removed_event_name %>
+      <%= @removed_event_name %>
+  <% else %>
+      <%= link_to @event.name, event_path(@event) if @event %>
+  <% end %>
+  <!--</p>-->
+  <!--<p class="news_time">-->
+  <!--</p>-->
+</div>

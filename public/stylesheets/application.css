@@ -72,8 +72,8 @@ root {
 
 .fleft {float:left;}
 .fright {float:right;}
-.nav-box nav ul.fright {background:none;padding-right:34px}
-.nav-box nav ul.fright li {padding:20px 0px 0px 25px}
+.nav-box nav ul.fright {background:none;padding-right:0px}
+/*.nav-box nav ul.fright li {padding:20px 0px 0px 25px}*/
 
 #welcome {
     margin-left: 20px;
@@ -130,7 +130,7 @@ footer div {
 }
 
 #sidebar_ann {
-    margin-top: 10px;
+    margin-top: 5px;
     background-color: #ffffdd;
 }
 .sideFrame {
@@ -139,6 +139,7 @@ footer div {
 }
 
 #sidebar_ann .subtitle {
+    margin-bottom:10px;
     padding-left: 10px;
     padding-top: 3px;
     padding-bottom: 2px;
@@ -168,6 +169,11 @@ footer div {
   padding: 10px 10px 5px 10px;
   font-size: 15px;
 }
+
+#profile_header td{
+    padding-top:5px;
+}
+
 #profile_header .detail ul li{
   margin-left: 10px;
   margin-top: 5px;
@@ -222,8 +228,23 @@ footer div {
   width: 100%;
 }
 .user_profile {
-  width: 300px;
+  width: 602px;
 }
+
+.user_profile div.field{
+    margin-bottom:0px;
+    clear: both;
+}
+
+.user_profile div.field label{
+    float: left;
+    width: 72px;
+    font-weight: bold;
+    font-size: 13px;
+    text-align: right;
+    padding-right: 1em;
+}
+
 .snapshot_line {
   margin-left: 10px;
   margin-top: 5px;
@@ -442,10 +463,10 @@ footer div {
     margin-bottom: 2px;
 }
 
-.event.attendee .name {
-    min-width: 4em;
-    float: left;
-}
+/*.event.attendee .name {*/
+    /*min-width: 4em;*/
+    /*float: left;*/
+/*}*/
 
 .event.sharings .quote {
     margin-left: 10px;
@@ -553,11 +574,138 @@ a.del {
     /*border: solid 0 white;*/
     /*color: #fff;*/
     /*display:block;*/
-    background:url(../../images/biz/link1-bgd.gif) left top repeat-x;color:#fff;text-decoration:none;
-    padding: 3px 13px 5px 13px;
+    /*background:url(../../images/biz/link1-bgd.gif) left top repeat-x;*/
+    color:#fff;text-decoration:none;
+    padding: 8px 23px 10px 23px;
+    /*background:#F85811;*/
+    background:#FDAB21;
     border: solid 0 #ffffff;
-    font-size: 13px;
+    font-size: 18px;
     cursor: pointer;
+    border-radius:10px;
 }
 
-/*#search_event_button:hover { text-decoration: underline; cursor: pointer;}*/
+#search_event_button:hover { text-decoration: underline; cursor: pointer;}
+
+div#news{
+    height: 300px;
+    overflow: auto;
+}
+
+div.news_thread div.user_badge div.avatar img {
+    height: 50px;
+}
+
+div.news_thread div.user_badge div.name, div#profile_header div.user_badge div.name{
+    display:none;
+}
+
+div.user_badge{
+    width: 100px;
+    float: left;
+    margin-right:10px;
+    margin-left:10px;
+}
+
+div.user_rating_star{
+    color:#FFD030;
+}
+
+div.news_thread{
+    /*overflow:auto;*/
+}
+
+div.thread_detail, div.user_detail {
+    margin-right:10px;
+    display: table;
+}
+
+div.user_detail {
+    width: 450px;
+}
+
+div.clear_line{
+    clear:both;
+    padding-top:5px;
+    padding-bottom:20px;
+}
+
+p.news_time{
+    /*text-align:right;*/
+}
+
+#motto{
+    text-align:center;
+    color:#FFFFFF;
+    /*background:#FFCA26*//*FFDD2A*//*;*/
+    background:#F85811;
+    /*background:#D83811;*/
+    height:40px;
+    /*border:solid 2px #F85811;*/
+    border-radius:10px;
+    margin: 10px 70px 10px 40px;
+}
+
+#motto h2{
+    padding-top:10px;
+    font-size:15px;
+    font-weight:bold;
+    text-shadow: 1px 1px 4px#000;
+}
+
+div.event_header div.detail h2{
+  margin-bottom:10px;
+}
+
+div.event_header div.creator{
+    width: 120px;
+    float:right;
+}
+
+div.event_header div.creator div.user_badge div.name{
+    display:none;
+}
+
+div.event_header div.detail{
+    float:left;
+    /*display:inline-block;*/
+    width: 430px;
+}
+
+div.event_header div.detail div.field{
+    /*display:inline-block;*/
+    float:left;
+    /*width: 300px;*/
+    margin-bottom:0px;
+}
+
+div.event_header div.detail .field_left {width:240px;float:left}
+div.event_header div.detail .field_right {width:240px;float:right}
+
+div.event_header .action {
+    float:right;
+}
+
+div.event_header .action .link1, div.event_header div.detail .action a img{
+    margin-right: 0px;
+    margin-bottom: 5px;
+    margin-left: 10px;
+}
+
+.event_header .detail .action .link1{
+    width: 56px;
+    float: none;
+}
+
+div.event_header div.detail .action .wrapper{
+    width: 56px;
+    display:inline;
+}
+
+div.event_header div.small_poster {
+    width: 100px;
+    height:100px;
+    margin-right:10px;
+    float:left;
+}
+

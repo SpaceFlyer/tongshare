@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110525065942) do
+ActiveRecord::Schema.define(:version => 20110526143336) do
 
   create_table "acceptances", :force => true do |t|
     t.integer  "event_id"
@@ -160,6 +160,18 @@ ActiveRecord::Schema.define(:version => 20110525065942) do
   add_index "memberships", ["group_id"], :name => "index_memberships_on_group_id"
   add_index "memberships", ["user_id"], :name => "index_memberships_on_user_id"
 
+  create_table "news", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "action"
+    t.integer  "target_event_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "news", ["action"], :name => "index_news_on_action"
+  add_index "news", ["target_event_id"], :name => "index_news_on_target_event_id"
+  add_index "news", ["user_id"], :name => "index_news_on_user_id"
+
   create_table "reminder_queues", :force => true do |t|
     t.datetime "time"
     t.integer  "method_type"
@@ -183,10 +195,20 @@ ActiveRecord::Schema.define(:version => 20110525065942) do
     t.integer  "creator_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "name"
   end
 
   add_index "removed_events", ["creator_id"], :name => "index_removed_events_on_creator_id"
   add_index "removed_events", ["event_id"], :name => "index_removed_events_on_event_id"
+
+  create_table "search_histories", :force => true do |t|
+    t.text     "param"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "search_histories", ["user_id"], :name => "index_search_histories_on_user_id"
 
   create_table "sharings", :force => true do |t|
     t.integer  "event_id"
@@ -198,16 +220,6 @@ ActiveRecord::Schema.define(:version => 20110525065942) do
 
   add_index "sharings", ["event_id"], :name => "index_sharings_on_event_id"
   add_index "sharings", ["shared_from"], :name => "index_sharings_on_shared_from"
-
-  create_table "sms_confirmations", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "token"
-    t.boolean  "confirmed"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "sms_confirmations", ["user_id"], :name => "index_sms_confirmations_on_user_id"
 
   create_table "user_extras", :force => true do |t|
     t.integer  "user_id"

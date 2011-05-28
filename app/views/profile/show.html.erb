@@ -7,8 +7,8 @@
     <dl>
       <dl>
         <% unless (@renren_url.nil? || @renren_url.blank?) %>
-          人人网个人主页：
-          <%= link_to @renren_url, :target=>"_blank", :title=>"访问#{@name}的人人网个人主页" do %>
+          人人主页：
+          <%= link_to @renren_url, :target=>"_blank", :title=>"访问#{@name}人人主页" do %>
             <%= image_tag 'renren.png'%>
           <% end %>
           <% if @unconfirmed %>
