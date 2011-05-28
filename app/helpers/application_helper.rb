@@ -55,6 +55,22 @@ HTML
     content.html_safe
   end
 
+  def my_button(*args)
+    name = args[0]
+    args.delete_at(0)
+#    if args.last.is_a?(Hash) && (args.length > 1)
+#      args.last[:class] = 'button_link'
+#    else
+#      args << {:class => 'button_link'}
+#    end
+    content = link_to(*args) do
+      safe_concat <<HTML
+      <span class="button_link">#{name}</span>
+HTML
+    end
+    return content.html_safe
+  end
+
   #(name, {options of url_for}
   #modified from link_to
   def styled_button(*args)
@@ -222,15 +238,56 @@ HTML
     render :partial => 'shared/news_detail'
   end
 
-  def event_header(event, disable_link = false, is_last_one = false)
-    @participants_count = Acceptance.count(:conditions => ["event_id=? AND decision=?", event.id, Acceptance::DECISION_ACCEPTED])
-    @check_count = News.count(:conditions => ["action=? AND target_event_id=?", News::ACTION_CHECK, event.id])
-    @event = event
-    @dates_for_google = (@event.begin.utc.strftime("%Y%m%dT%H%M00Z")) + "/" + (@event.end ? @event.end.utc.strftime("%Y%m%dT%H%M00Z") : @even.begin.utc.strftime("%Y%m%dT%H%M00Z"))
-    @friendly_time = friendly_time_range(event.begin, event.end)
+  def instance_header(instance, disable_link = false, is_last_one = false)
+    @event = instance.event
+    @participants_count = Acceptance.count(:conditions => ["event_id=? AND decision=?", @event.id, Acceptance::DECISION_ACCEPTED])
+    @check_count = News.count(:conditions => ["action=? AND target_event_id=?", News::ACTION_CHECK, @event.id])
+    @instance = instance
+    @dates_for_google = (instance.begin.utc.strftime("%Y%m%dT%H%M00Z")) + "/" + (instance.end ? instance.end.utc.strftime("%Y%m%dT%H%M00Z") : instance.begin.utc.strftime("%Y%m%dT%H%M00Z"))
+    @friendly_time = friendly_time_range(instance.begin, instance.end)
     @disable_link = disable_link
     @is_last_one = is_last_one
-    render :partial => 'shared/event_header'
+    render :partial => 'shared/instance_header'
+  end
+
+  def user_agenda(user)
+    @user = user
+    params[:range] = "next" unless ["next", "day", "week"].include?(params[:range])
+    params[:offset] ||= 0
+    params[:limit] ||= 10
+    @range = params[:range].to_sym
+    @offset = params[:offset].to_i
+    @limit = params[:limit].to_i
+
+    if @range == :next
+      @instances = query_next_accepted_instance_includes_event(Time.now, @limit + 1, @user.id, @offset)
+      if @instances.count == @limit + 1
+        #not the last page
+        @instances.delete_at(@instances.count - 1)
+        @is_last_page = false
+      else
+        @is_last_page = true
+      end
+      @limit = @instances.count
+    else
+      case @range
+        when :day
+          from = Date.today + @offset.days
+          to = Date.today + @offset.days + 1.days
+        when :week
+          from = Date.today.beginning_of_week + @offset.weeks
+          to = Date.today.beginning_of_week + @offset.weeks + 1.weeks
+      end
+
+      #TODO: this month, all(events)
+
+      #logger.debug from.to_time.to_s
+      #logger.debug to.to_time.to_s
+
+      @instances = query_all_accepted_instance_includes_event(from.to_time, to.to_time, @user.id)
+    end
+
+    render :partial => 'shared/user_agenda'
   end
 
 end

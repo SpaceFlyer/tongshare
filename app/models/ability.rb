@@ -44,15 +44,22 @@ class Ability
     #register enabled
     can :create, User
 
+    can :show, Event do |e|
+      e.public?
+    end
+
     return if @user.nil?  #if not login, no more permissions
 
     #############################
     # Abilities of normal users
     #############################
 
-    #events
-    can :write, Event, :creator_id => @user.id
     can :show, Event do |e|
+      e.public? || e.open_to_user?(@user.id)
+    end
+
+    #events
+    can :write, Event, :creator_id => @user.id do |e|
       e.open_to_user?(@user.id)
       #TODO: I think we need to build a index table showing whether a user can access to an event
     end

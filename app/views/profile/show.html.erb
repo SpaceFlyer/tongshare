@@ -1,32 +1,4 @@
-<%= content_box @target_user.friendly_name, "的详细信息" do %>
-<div class="event attendee">
-<table>
-<tr>
-  <td><%= image_tag( ((@photo_url.nil? || @photo_url.blank?) ? 'default.jpg' : @photo_url), :onError => "this.src='/images/default.jpg';" ) %></td>
-  <td>
-    <dl>
-      <dl>
-        <% unless (@renren_url.nil? || @renren_url.blank?) %>
-          人人主页：
-          <%= link_to @renren_url, :target=>"_blank", :title=>"访问#{@name}人人主页" do %>
-            <%= image_tag 'renren.png'%>
-          <% end %>
-          <% if @unconfirmed %>
-            <% notice = '人人链接旁边的（？）表示同享日程显示的人人链接并没有得到其本人的确认，但是同享日程觉得这很有可能就是其本人的人人链接' %>
-            <%= link_to '（?）', request.request_uri + (request.request_uri.include?('?') ? '&' : '?') + 'notice=' + notice, :title => notice %>
-          <% end %>
-        <% else %>
-          &nbsp;
-        <% end %>
-      </dl>
-      <dl>电子邮箱：<%= @email %></dl>
-      <dl>院系部门：<%= @department %></dl>
-      <dl>住址：<%= @address %></dl>
-      <dl>电话：<%= @phone %></dl>
-    </dl>
-  </td>
-</tr>
-</table>
-</div>
-<%= link_to '返回', url_for(:back) %>
+<%= content_box @target_user.friendly_name, "的详细信息与日程" do %>
+    <%= user_profile @target_user, false %>
+    <%= user_agenda(@target_user) %>
 <% end %>

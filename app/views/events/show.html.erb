@@ -1,111 +1,24 @@
 <%= javascript_include_tag "event.js" %>
 <%= content_box "" do %>
 
-    <%= div_for @event, :class => "show" do %>
+    <%= instance_header(@event.instances[0], true, true) %>
 
-        <%= event_header(@event, true, false) %>
 
-    <% end %>
+    <% if !(attendees = get_attendees(@event, @attendee_offset, 10+1)).empty? %>
+        <h3 id="attendees_h3">活动参与者</h3>
+        <div class="attendees">
 
-<% end %>
-
-<% unless @invited_feedbacks.nil? %>
-    <%= content_box "受邀者", "反馈", true do %>
-        <div class="event feedback">
-          <div class="statistic">
-            您发出的邀请共有<%= @invited_feedbacks[:counter][:accepted] %>人接受，
-            <%= @invited_feedbacks[:counter][:rejected] %>人拒绝，
-            <%= @invited_feedbacks[:counter][:undecided] %>人尚未回复。
+          <div class="event attendee">
+            <% attendees[0...10].each do |att| %>
+                <%= user_profile(att, att == attendees[0...10].last) %>
+            <% end %>
           </div>
-          <br/>
-          <ul>
-            <% for feedback in @invited_feedbacks[:data] %>
-                <li>
-                  <%= feedback[:user].friendly_name %>：
-                  <% if feedback[:decision].nil? %>
-                      未定
-                  <% elsif feedback[:decision] == true %>
-                      接受
-                  <% else %>
-                      拒绝
-                  <% end %>
-                </li>
-            <% end %>
-          </ul>
-        </div>
-
-        <br/>
-        <p>您可以将下面的文字直接通过短信、飞信等形式群发给受邀请者<br/>
-          <%= link_to "展开/关闭邀请模板", "javascript: hide_or_show('invitation_message')" %></p>
-        <div id="invitation_message" class="invitation_message">
-          <p><%= @current_user.friendly_name %>邀请你参加活动“<%= @event.name %>”
-          </p>
-
-          <p>
-            时间：<%= @friendly_time_range %>
-
-            <% if @event.recurring? %>
-                <br/>重复：<%= show_friendly_rrule(@event) %>
-            <% end %>
-
-            <% if !@event.location.blank? %>
-                <br/>地点：<%= @event.location %>
-            <% end %>
-
-            <% if !@event.extra_info.blank? %>
-                <br/><%= @event.extra_info %>
-            <% end %>
-            <br/>[本信息由"同享日程"自动生成，它可以<%= rand_function_description %>]
-          </p>
-
-          <p>查看更多活动信息并对该邀请进行回复，请进入链接：<br/><%= "http://" + SITE + event_path(@event) + "?share_token=" + @event.get_or_create_share_token %>
-          </p>
-        </div>
-
-    <% end %>
-<% end %>
-
-<% unless @sharings.empty? %>
-    <br/>
-    <%= content_box "邀请你", "参加", true do %>
-        <div class="event sharings">
-          以下用户邀请你参加此活动：
-          <ul>
-            <% for sharing in @sharings %>
-                <li>
-                  <div class="name"><%= sharing.user.friendly_name %></div>
-                  <% unless sharing.extra_info.blank? %>
-                      <div class="quote">“<%= sharing.extra_info %>“</div>
-                  <% end %>
-                </li>
-            <% end %>
-          </ul>
-          <br/>
-          <% if @acceptance.nil? && @token.nil? %>
-              <div class="event buttons">
-                <%= styled_button "接受邀请", {:controller => "acceptance", :action => "accept", :id => sharing.id} %>
-                <%= styled_button "拒绝邀请", {:controller => "acceptance", :action => "deny", :id => sharing.id} %>
-              </div>
-          <% elsif @acceptance && @acceptance.decision == true %>
-              （你已经接受了这些邀请）
-          <% elsif @acceptance && @acceptance.decision == false %>
-              （你已经拒绝了这些邀请）
+          <%= link_to('上一页', params.merge({:offset => @attendee_offset - 10})) if @attendee_offset >= 10 %>
+          <% if @attendee_offset >= 10 && attendees.count > 10 %>  &nbsp;&nbsp;
           <% end %>
+          <%= link_to('下一页', params.merge({:offset => @attendee_offset + 10})) if attendees.count > 10 %>
         </div>
     <% end %>
-<% end %>
-<br/>
-<% if !(attendees = get_attendees(@event, @attendee_offset, 10+1)).empty? %>
-    <%= content_box "活动", "参与者", true do %>
-        <div class="event attendee">
-          <% attendees[0...10].each do |att| %>
-              <%= user_profile(att, att == attendees[0...10].last) %>
-          <% end %>
-        </div>
-        <%= link_to('上一页', params.merge({:offset => @attendee_offset - 10})) if @attendee_offset >= 10 %>
-        <% if @attendee_offset >= 10 && attendees.count > 10 %>  &nbsp;&nbsp;
-        <% end %>
-        <%= link_to('下一页', params.merge({:offset => @attendee_offset + 10})) if attendees.count > 10 %>
-    <% end %>
+
 <% end %>
 

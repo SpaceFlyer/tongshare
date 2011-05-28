@@ -7,4 +7,7 @@ nbproject
 nbproject/*/*
 .idea
 .idea/*
+public/system/*
+public/system/*/*
+public/system/*/*/*
 

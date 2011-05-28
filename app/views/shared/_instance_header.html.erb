@@ -1,0 +1,94 @@
+<div class="event_header">
+  <% if can? :show, @event %>
+      <!--<div class="small_poster">-->
+      <!--</div>-->
+      <div class="detail">
+        <h2>
+          <% if @disable_link %>
+              <%= @instance.name %>
+          <% else %>
+              <%= link_to @event.name, event_path(@event, :inst => @instance.id), :title => @event.extra_info %>
+          <% end %>
+        </h2>
+
+        <div class="action" align="right">
+          <%= link_to "http://www.google.com/calendar/event?action=TEMPLATE&dates=#{@dates_for_google}&text=#{URI.escape(@event.name)}&details=#{URI.escape(@event.extra_info)}&location=#{URI.escape(@event.location)}", :target => "blank", :title => "将该活动添加到Google日历" do %>
+              <%= image_tag "calendar_plus_en.gif", :title => "将该活动添加到Google日历" %>
+          <% end %>
+        </div>
+
+        <div class="field">
+          已有<%= @participants_count %>人加入该活动，<%= @check_count %>人次查看此活动。
+        </div>
+        <br/><br/>
+
+        <div class="field">
+          <label class="title">时间</label>
+          <%= @friendly_time %>
+        </div>
+        <br/>
+        <% if !@event.location.blank? %>
+            <div class="field">
+              <label class="title">地点</label>
+              <%= "#{@event.location}" %>
+            </div>
+            <br/>
+        <% end %>
+        <% if !@event.extra_info.blank? %>
+            <div class="field">
+              <label class="title">详情</label>
+              <% if @disable_link %>
+                  <%= @event.extra_info %>
+              <% else %>
+                  <%= @event.extra_info.truncate(25) %>
+              <% end %>
+            </div>
+            <br/>
+        <% end %>
+
+        <br/>
+
+        <div class="field">
+          <%= my_button "分享", {:controller => "sharings", :action => "new", :event_id => @event.id},
+                        :title => "邀请其他人来参加此活动" %>
+          <% if current_user %>
+              <% acc = find_acceptance(@event) %>
+              <% if (!acc || acc.decision != Acceptance::DECISION_ACCEPTED) && @event.creator.id != current_user.id %>
+                  <%= my_button "参加", {:controller => "acceptance", :action => "accept", :event => @event.id, :share_token => @token} %>
+              <% end %>
+              <!-- 等到好友分享重新开放后再加拒绝 -->
+              <%= my_button "退出", {:controller => "acceptance", :action => "exit", :id => acc.id}, :confirm => "确实要退出该活动吗？",
+                            :title => "从此活动中退出。如果此活动是你的课程，则“退出活动”适用于你计划中期退课等情况" \
+                            if can? :exit, acc %>
+              <% if can?(:edit, @event) || can?(:destroy, @event) %>
+                  <%= my_button "编辑", edit_event_path(@event) if can? :edit, @event %>
+                  <%= my_button "删除", @event, :method => "delete",
+                                :confirm => ("你确实要删除\"#{@event.name}\"吗？" + (@event.recurring? ? "这是一个重复的事件，所有重复项都会被删除！" : "")) \
+           if can? :destroy, @event %>
+              <% end %>
+          <% end %>
+        </div>
+
+      </div>
+
+      <div class="creator">
+        <%= user_badge(@event.creator) %>
+        <div class="creator_link" align="center">
+          由<%= link_to @event.creator.friendly_name, "/profile/show?target_user=#{@event.creator.id}" %>创建
+        </div>
+      </div>
+  <% else %>
+      <div class="detail">
+        <div class="field">
+          <h2>非公开的活动</h2>
+          <label class="title">时间</label>
+          <%= @friendly_time %>
+        </div>
+      </div>
+  <% end %>
+  <div class="clear_line">
+    <% if !@is_last_one %>
+        <hr/>
+    <% end %>
+  </div>
+</div>

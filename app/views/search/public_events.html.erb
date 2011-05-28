@@ -5,7 +5,7 @@
         <h2>没有搜索到任何活动</h2>
     <% end %>
     <% for event in @events[0...10] %>
-        <%= event_header(event) %>
+        <%= instance_header(event.instances[0]) %>
     <% end %>
     <div class="agenda_pannel">
       <ul>

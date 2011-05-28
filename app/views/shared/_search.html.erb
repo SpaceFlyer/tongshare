@@ -1,5 +1,5 @@
 <%= content_box nil, "" do %>
-    <%= form_tag "search/public_events" do %>
+    <%= form_tag "search/public_events", :method => 'get' do %>
       <fieldset id="event_filter">
         <div class="field_left">
           <label class="title">搜索开始时间</label>

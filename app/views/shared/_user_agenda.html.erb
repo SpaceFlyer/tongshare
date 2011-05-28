@@ -1,0 +1,47 @@
+<div class="agenda_list" id="my_events">
+  <%
+     week_str = number_of_week_in_thu
+     week_str = "，#{week_str}" unless week_str.blank?
+  %>
+  <div id="current_time">现在是<%= l Time.now, :format => :long %><%= week_str %>。</div>
+
+  <div class="agenda_pannel">
+    <ul>
+      <li><%= link_to_unless (@range == :next && @offset == 0), "接下来", params.merge({:range => :next}) %></li>
+      |
+      <li><%= link_to_unless (@range == :day), "按天", params.merge({:range => :day, :offset => 0}) %></li>
+      |
+      <li> <%= link_to_unless (@range == :week), "按周", params.merge({:range => :week, :offset => 0}) %></li>
+    </ul>
+  </div>
+  <% if @instances.length > 0 %>
+      <% for instance in @instances %>
+          <%= instance_header(instance, false, instance == @instances.last) %>
+      <% end %>
+  <% else %>
+      <p style="padding-left: 20px;">没有活动了</p>
+  <% end %>
+  <% if @range == :next %>
+      <div>
+        <% if @offset == 0 %>
+            <% if @limit != 0 %>
+                以上是即将发生的前<%= @limit %>个活动。
+            <% end %>
+        <% else %>
+            以上是即将发生的第<%= @offset + 1 %>个到<%= @offset + @limit %>个活动。
+        <% end %>
+        <%= link_to "之前的活动", params.merge({:offset => [0, @offset - 10].max}) if @offset > 0 %>
+        <%= link_to "之后的活动", params.merge({:offset => @offset + 10}) if !@is_last_page %>
+      </div>
+  <% end %>
+  <% unit = params[:range] == "day" ? '天' : params[:range] == "week" ? '周' : nil %>
+  <% if unit %>
+      <div class="agenda_pannel">
+        <ul>
+          <li><%= link_to "前一"+unit, params.merge({:range => params[:range], :offset => params[:offset].to_i-1}) %></li>
+          |
+          <li> <%= link_to "下一"+unit, params.merge({:range => params[:range], :offset => params[:offset].to_i+1}) %></li>
+        </ul>
+      </div>
+  <% end %>
+</div>
