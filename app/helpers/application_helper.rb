@@ -244,6 +244,7 @@ HTML
     @check_count = News.count(:conditions => ["action=? AND target_event_id=?", News::ACTION_CHECK, @event.id])
     @instance = instance
     @dates_for_google = (instance.begin.utc.strftime("%Y%m%dT%H%M00Z")) + "/" + (instance.end ? instance.end.utc.strftime("%Y%m%dT%H%M00Z") : instance.begin.utc.strftime("%Y%m%dT%H%M00Z"))
+    @extra_for_google = (instance.extra_info.blank? ? "" : instance.extra_info + "\n---\n") + "来自于“i.同享”：http://#{SITE}/events/#{@event.id}?inst=#{instance.id}"
     @friendly_time = friendly_time_range(instance.begin, instance.end)
     @disable_link = disable_link
     @is_last_one = is_last_one

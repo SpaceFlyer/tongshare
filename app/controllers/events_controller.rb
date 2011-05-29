@@ -67,7 +67,7 @@ class EventsController < ApplicationController
     authorize! :show, @event unless (@event.public? || @token && @event.share_token == @token)
 
     already_focused = !News.first(:conditions => ["created_at >= ? AND user_id=? AND target_event_id=?", Time.now.utc-1.hour, current_user.id, @event.id]).nil?
-    News.create!(:user_id => current_user.id, :action => News::ACTION_CHECK, :target_event_id => @event.id) if !already_focused
+    News.create!(:user_id => current_user.id, :action => News::ACTION_CHECK, :target_event_id => @event.id) if !already_focused && @event.public?
 
     @instance = params[:inst].blank? ? nil : Instance.find(params[:inst])
     @acceptance = find_acceptance(@event)
@@ -229,7 +229,7 @@ class EventsController < ApplicationController
       end
     end
 
-    News.create!(:user_id => current_user.id, :action => News::ACTION_CREATE, :target_event_id => @event.id)
+    News.create!(:user_id => current_user.id, :action => News::ACTION_CREATE, :target_event_id => @event.id) if @event.public?
   end
 
   # PUT /events/1
@@ -258,7 +258,7 @@ class EventsController < ApplicationController
       end
     end
 
-    News.create!(:user_id => current_user.id, :action => News::ACTION_EDIT, :target_event_id => @event.id)
+    News.create!(:user_id => current_user.id, :action => News::ACTION_EDIT, :target_event_id => @event.id) if @event.public?
   end
 
   # DELETE /events/1
@@ -275,7 +275,7 @@ class EventsController < ApplicationController
       format.xml  { head :ok }
     end
 
-    News.create!(:user_id => current_user.id, :action => News::ACTION_DESTROY, :target_event_id => @event.id)
+    News.create!(:user_id => current_user.id, :action => News::ACTION_DESTROY, :target_event_id => @event.id) if @event.public?
   end
 
 

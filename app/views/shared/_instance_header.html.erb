@@ -12,7 +12,7 @@
         </h2>
 
         <div class="action" align="right">
-          <%= link_to "http://www.google.com/calendar/event?action=TEMPLATE&dates=#{@dates_for_google}&text=#{URI.escape(@event.name)}&details=#{URI.escape(@event.extra_info)}&location=#{URI.escape(@event.location)}", :target => "blank", :title => "将该活动添加到Google日历" do %>
+          <%= link_to "http://www.google.com/calendar/event?action=TEMPLATE&dates=#{@dates_for_google}&text=#{URI.escape(@event.name)}&details=#{URI.escape(@extra_for_google)}&location=#{URI.escape(@event.location)}", :target => "blank", :title => "将该活动添加到Google日历" do %>
               <%= image_tag "calendar_plus_en.gif", :title => "将该活动添加到Google日历" %>
           <% end %>
         </div>

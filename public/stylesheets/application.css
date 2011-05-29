@@ -684,6 +684,7 @@ a.del {
 }
 
 #search_event_button:hover {
+    color:#D83811;
     text-decoration: underline;
     cursor: pointer;
 }
