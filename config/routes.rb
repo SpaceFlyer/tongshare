@@ -1,5 +1,7 @@
 Tongshare::Application.routes.draw do
 
+  get "ajax/load_news"
+
   get "private/get_diff"
 
   match "thankful" => "thankful#index"

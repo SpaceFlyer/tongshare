@@ -1,0 +1,20 @@
+<% if @news.count > 0 %>
+    <% for thread in @news %>
+        <div class="news_thread" id="news_<%= thread.id %>">
+          <%= user_badge(thread.user) %>
+          <%= news_detail(thread) %>
+          <div class="clear_line">
+            <hr size="1px" width="90%"/>
+          </div>
+        </div>
+    <% end %>
+    <div id="more">
+      <% loading_html = image_tag('loading.gif') %>
+      <% query_url = "/ajax/load_news?previous_id=#{@news.last.id}" %>
+      <a class="button_link" onclick="$('#more').html('正在读取，请稍等...');$.get('<%= query_url %>', function(data){$('#more').replaceWith(data)})">更多新鲜事</a>
+    </div>
+<% else %>
+    <div id="more">
+      没有更多的新鲜事了
+    </div>
+<% end %>

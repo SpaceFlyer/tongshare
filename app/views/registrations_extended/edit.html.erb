@@ -32,7 +32,13 @@
 
               <div class="field">
                 <label class="title">当前头像</label>
-                <%= image_tag(((@photo_url.nil? || @photo_url.blank?) ? 'default.jpg' : @photo_url), :onError => "this.src='/images/default.jpg';") %>
+                <% if @photo_url.blank? %>
+                    <%= image_tag('default.jpg') %>
+                <% else %>
+                    <a class="fancy_image" href="<%= @user.user_extra.avatar.url %>">
+                      <%= image_tag(@photo_url) %>
+                    </a>
+                <% end %>
               </div>
 
               <div class="field">

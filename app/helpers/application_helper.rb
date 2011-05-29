@@ -35,7 +35,7 @@ module ApplicationHelper
 									<div class="right-top-corner">
 										<div class="inner">
 											#{title_str}
-											#{capture(&block)}
+      #{capture(&block)}
 										</div>
 									</div>
 								</div>
@@ -48,7 +48,7 @@ HTML
       content = <<HTML
         <div class="inside">
 					#{title_str}
-					#{capture(&block)}
+      #{capture(&block)}
 				</div>
 HTML
     end
@@ -104,7 +104,7 @@ HTML
     else
       content += form.submit(text, :style => "width:0px; height:0px; border:0px;")
     end
-    
+
     content.html_safe
   end
 
@@ -120,7 +120,7 @@ HTML
   def header_announcement
     #check confirmation for employee_no
     user_id_rec = current_user.user_identifier.find(:first,
-      :conditions => ["login_type = ?", UserIdentifier::TYPE_EMPLOYEE_NO])
+                                                    :conditions => ["login_type = ?", UserIdentifier::TYPE_EMPLOYEE_NO])
 
     if !user_id_rec.nil?
       @not_confirmed = !user_id_rec.confirmed
@@ -161,8 +161,8 @@ HTML
   end
 
   FUNCTION_DESCRIPTIONS = ['让您随时随地查看课表，并找到同上一节课的Ta',
-    '通过用户的反馈告诉您哪节课有点名，并主动发送报警邮件',
-    '让您更轻松地通过分享功能与朋友、同学们一起参加活动，寻找大家共同空余的时间并且方便掌握大家的反馈']
+                           '通过用户的反馈告诉您哪节课有点名，并主动发送报警邮件',
+                           '让您更轻松地通过分享功能与朋友、同学们一起参加活动，寻找大家共同空余的时间并且方便掌握大家的反馈']
 
   def rand_function_description
     return FUNCTION_DESCRIPTIONS[rand(FUNCTION_DESCRIPTIONS.size)]
@@ -289,6 +289,15 @@ HTML
     end
 
     render :partial => 'shared/user_agenda'
+  end
+
+  def load_news(previous_id = nil)
+    if (previous_id)
+      @news = News.all(:limit => 10, :conditions => ["id < ?", previous_id], :order => 'id DESC')
+    else
+      @news = News.all(:limit => 10, :order => 'id DESC')
+    end
+    render :partial => 'shared/news'
   end
 
 end

@@ -22,6 +22,7 @@ a {
 }
 
 a:hover, .button_link:hover {
+    cursor:pointer;
     color: #d83811;
     text-decoration: none;
 }
@@ -690,7 +691,7 @@ a.del {
 }
 
 div#news {
-    height: 300px;
+    min-height: 300px;
     overflow: auto;
 }
 
@@ -700,6 +701,10 @@ div.news_thread div.user_badge div.avatar img {
 
 div.news_thread div.user_badge div.name, div#profile_header div.user_badge div.name {
     display: none;
+}
+
+div#news #more{
+    padding-left: 20px;
 }
 
 div.user_badge {
