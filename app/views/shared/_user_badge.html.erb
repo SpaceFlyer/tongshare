@@ -1,6 +1,12 @@
 <div class="user_badge">
   <div class="avatar" align="center">
-    <%= image_tag(((@photo_url.nil? || @photo_url.blank?) ? 'default.jpg' : @photo_url)) %>
+    <% if @photo_url.blank? %>
+        <%= image_tag('default.jpg') %>
+    <% else %>
+        <a class="fancy_image" href="<%= @user.user_extra.avatar.url %>">
+          <%= image_tag(@photo_url) %>
+        </a>
+    <% end %>
   </div>
   <div class="user_rating_star" align="center">
     ★★★☆☆

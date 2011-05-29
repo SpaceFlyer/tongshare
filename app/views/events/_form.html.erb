@@ -1,3 +1,6 @@
+<script type="text/javascript" src="/javascripts/jquery/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript" src="/javascripts/jquery/jquery.ui.datepicker-zh-CN.js"></script>
+
 <%= form_for(@event, :html => {:id => "event_form"}) do |f| %>
     <% if @event.errors.any? %>
         <div id="error_explanation">
@@ -20,51 +23,17 @@
         </div>
         <div class="field">
           <%= f.label :begin, :class=>"title" %>
-          <%= f.calendar_date_select :begin, :class=>"textvalue", :minute_interval => 1, :onchange => 'on_change_begin("event_begin", "event_end")' %>
+          <%= f.text_field :begin, :class=>"textvalue", :minute_interval => 1, :onchange => 'on_change_begin("#event_begin", "#event_end")', :value => @event.begin.strftime("%Y-%m-%d %H:%M") %>
         </div>
         <div class="field">
           <%= f.label :end, :class=>"title" %>
-          <%= f.calendar_date_select :end, :class=>"textvalue", :minute_interval => 1, :onchange => 'on_change_end("event_begin", "event_end")' %>
-        </div>
-        <div class="field">
-          <label class="title">重复</label>
-          <%= frequency_radio_buttons f %>
+          <%= f.text_field :end, :class=>"textvalue", :minute_interval => 1, :onchange => 'on_change_end("#event_begin", "#event_end")', :value => @event.end.strftime("%Y-%m-%d %H:%M") %>
         </div>
 
-        <div id="repeat_options" style="display:none">
-          <fieldset>
-            <div class="field">
-              <div id="repeat_legend" style="display:none"></div>
-              <%= f.label :rrule_interval, "每隔", :class=>"title" %>
-              <%= f.number_field :rrule_interval, :min => 1, :maxlength => 3 %>
-              <span id="interval_suffix">天</span>
-            </div>
-            <div id="rrule_days_panel" class="field" style="display:none">
-              <label class="title">重复于</label><%= days_check_boxes f %>
-            </div>
-            <div id="rrule_end_panel" class="field">
-              <div>
-                <label class="title">重复结束条件</label>
-                <%= f.radio_button :rrule_end_condition, Event::RRULE_END_BY_COUNT %>
-                <%= label_tag "event_rrule_end_condition_#{Event::RRULE_END_BY_COUNT}", "重复次数：" %>
-                <%= f.number_field :rrule_count, :min => 1, :max => Event::MAX_INSTANCE_COUNT, :maxlength => 3,
-                                   :onclick => "$('event_rrule_end_condition_#{Event::RRULE_END_BY_COUNT}').checked = true" %>
-                次
-              </div>
-              <br/>
-
-              <div>
-                <label class="title">&nbsp;&nbsp;</label>
-                <%= f.radio_button :rrule_end_condition, Event::RRULE_END_BY_DATE %>
-                <%= label_tag "event_rrule_end_condition_#{Event::RRULE_END_BY_DATE}", "终止日期：" %>
-                <%= f.calendar_date_select :rrule_repeat_until, :class=>"datevalue", :time => false,
-                                           :onchange => "$('event_rrule_end_condition_#{Event::RRULE_END_BY_DATE}').checked = true" %>
-              </div>
-
-            </div>
-          </fieldset>
-        </div>
-        <%= javascript_tag "show_repeat_options(\"#{@event.rrule_frequency}\");" %>
+        <script defer="defer" type="text/javascript">
+            $('#event_begin').datetimepicker();
+            $('#event_end').datetimepicker();
+        </script>
 
         <div class="field">
           <%= f.label :location, :class=>"title" %>

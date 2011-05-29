@@ -1,15 +1,23 @@
+<script type="text/javascript" src="/javascripts/jquery/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript" src="/javascripts/jquery/jquery.ui.datepicker-zh-CN.js"></script>
+
 <%= content_box nil, "" do %>
     <%= form_tag "search/public_events", :method => 'get' do %>
       <fieldset id="event_filter">
         <div class="field_left">
           <label class="title">搜索开始时间</label>
-          <%= calendar_date_select_tag :begin, @last_search ? @last_search[:begin] : Time.now, :minute_interval => 1, :time => true %>
+          <input type="text" id="begin" name="begin" value="<%= @last_search ? @last_search[:begin] : Time.now.strftime("%Y-%m-%d %H:%M") %>"/>
         </div>
 
         <div class="field_right">
           <label for="begin" class="title">搜索结束时间</label>
-          <%= calendar_date_select_tag :end, @last_search ? @last_search[:end] : Time.now+1.day, :minute_interval => 1, :time => true %>
+          <input type="text" id="end" name="end" value="<%= @last_search ? @last_search[:end] : (Time.now + 1.day).strftime("%Y-%m-%d %H:%M") %>"/>
         </div>
+
+        <script defer="defer" type="text/javascript">
+            $('#begin').datetimepicker();
+            $('#end').datetimepicker();
+        </script>
 
         <!--initialize time range-->
         <script type="text/javascript">

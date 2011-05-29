@@ -18,17 +18,17 @@ function get_date(value){
 }
 
 function on_change_begin(begin_id, end_id){
-    currentBegin = get_date($(begin_id).getValue())
+    currentBegin = get_date($(begin_id).val())
     newEndInt = Date.parse(currentBegin) + period;
     newEnd = new Date(newEndInt);
     newValue = newEnd.toFormattedString('%Y-%m-%d %T')
     if (newValue != "NaN-NaN-NaN NaN:NaN")
-    $(end_id).setValue(newEnd.toFormattedString('%Y-%m-%d %T'))
+    $(end_id).val(newEnd.toFormattedString('%Y-%m-%d %T'))
 }
 
 function on_change_end(begin_id, end_id){
-    currentBegin = get_date($(begin_id).getValue())
-    currentEnd= get_date($(end_id).getValue())
+    currentBegin = get_date($(begin_id).val())
+    currentEnd= get_date($(end_id).val())
     period = Date.parse(currentEnd)-Date.parse(currentBegin)
 }
 
