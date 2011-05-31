@@ -26,7 +26,7 @@
           <% if @next_three_instances.length > 0 %>
               <li>接下来您有<%= link_to "#{@next_three_instances.length > 3 ? "大于3" : @next_three_instances.length.to_s}个活动", '/events'%>要参加。</li>
           <% else %>
-              <li>没什么活动了？请<%= link_to '创建一个活动', '/events/new' %>或者搜索一个您感兴趣的活动参加。</li>
+              <li>没什么活动了？请<%= link_to '创建一个活动', '/events/new' %>或者<%= link_to '搜索', '/' %>一个您感兴趣的活动参加。</li>
           <% end %>
           <% if @num_friendship_from - @num_friendship_bidirectional > 0 %>
               <li>

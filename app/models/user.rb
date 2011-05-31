@@ -89,6 +89,8 @@ class User < ActiveRecord::Base
     email_rec = self.user_identifier.find_by_login_type(UserIdentifier::TYPE_EMAIL_DUMMY)
     return email_rec.login_value unless (email_rec.nil? || email_rec.login_value.blank?)
 
+    return "无名"
+
     return nil
   end
 

@@ -224,6 +224,17 @@ HTML
     @user = user
     @friendly_name = user.friendly_name
     @photo_url = user.user_extra.photo_url if user.user_extra
+    @renren_url = user.user_extra.renren_url if user.user_extra
+    @gold_rating = 0
+    @gold_rating += 1 if !user.user_extra.name.blank?
+    @gold_rating += 1 if !user.user_extra.gender.blank? && !user.user_extra.city.blank? && @gold_rating >= 1
+    @gold_rating += 1 if !user.user_extra.org.blank? && !user.user_extra.department.blank? && @gold_rating >= 2
+    @blue_rating = 0
+    @blue_rating += 1 if !user.user_extra.fetion.blank?
+    @blue_rating += 1 if !user.user_extra.gtalk.blank?
+    @blue_rating += 1 if !user.user_extra.qq.blank?
+    @blue_rating += 1 if !user.user_extra.msn.blank?
+    @red_rating = user.validated_emails.count
 
     render :partial => 'shared/user_badge'
   end

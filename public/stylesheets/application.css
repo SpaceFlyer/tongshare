@@ -714,8 +714,20 @@ div.user_badge {
     margin-left: 10px;
 }
 
-div.user_rating_star {
+div.user_badge div.user_rating_star img{
+    vertical-align:middle;
+}
+
+.user_rating_star {
     color: #FFD030;
+}
+
+.user_rating_star .red_star {
+    color: #f95812;
+}
+
+.user_rating_star .blue_star {
+    color: #0c72d6;
 }
 
 div.news_thread {
@@ -858,3 +870,59 @@ div.attendees {
 .ui-timepicker-div dl dt{ height: 25px; }
 .ui-timepicker-div dl dd{ margin: -25px 0 10px 65px; }
 .ui-timepicker-div td { font-size: 90%; }
+
+/* simple css-based tooltip */
+.tooltip {
+	background-color:#000;
+	border:1px solid #fff;
+	padding:10px 15px;
+	width:200px;
+	display:none;
+	color:#fff;
+	text-align:left;
+	font-size:12px;
+
+	/* outline radius for mozilla/firefox only */
+	-moz-box-shadow:0 0 10px #000;
+	-webkit-box-shadow:0 0 10px #000;
+}
+
+#user_edit fieldset {
+    padding: 20px 20px 0px 20px;
+    margin-bottom: 20px;
+    margin-left: 20px;
+    width: 500px;
+    display: block;
+    border: solid 2px #ffcc2a;
+    border-radius: 20px;
+}
+
+#user_edit fieldset legend span{
+    font-size:large;
+}
+
+a.bClose {
+    color: #000;
+    cursor: pointer;
+    font-weight: bold;
+    position: absolute;
+    right: 15px;
+    text-decoration: none;
+    top: 10px;
+}
+
+#alert{
+    max-width: 800px;
+    display:none;
+    background: #ffffff;
+    padding: 30px 40px 20px 30px;
+    border-radius: 10px;
+    text-align: center;
+    /*border: solid 3px #FF5811;*/
+}
+
+#alert span{
+    color: #ff5811;
+    font-size: 30px;
+    font-weight:bold;
+}

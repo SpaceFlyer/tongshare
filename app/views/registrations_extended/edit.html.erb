@@ -11,14 +11,31 @@
         </div>
 
         <%= f.fields_for :user_extra do |extra| %>
+            <div class="field">
+              <label class="title">当前头像</label>
+              <% if @photo_url.blank? %>
+                  <%= image_tag('default.jpg') %>
+              <% else %>
+                  <a class="fancy_image" href="<%= @user.user_extra.avatar.url %>">
+                    <%= image_tag(@photo_url) %>
+                  </a>
+              <% end %>
+            </div>
+
+            <div class="field">
+              <label class="title">上传新头像</label>
+              <%= extra.file_field :avatar %>
+            </div>
+
             <fieldset id="basic_fields">
+              <legend><span>基本信息</span>：让大家搜索到你</legend>
               <div class="field">
-                <%= extra.label :name, "姓名", :class => 'title' %>
-                <%= extra.text_field :name %>
+                <label class="title">姓名<span class="user_rating_star">★</span></label>
+                <%= extra.text_field :name, :title => '请填写真实姓名，方便朋友找到你' %>
               </div>
 
               <div class="field">
-                <%= extra.label :gender, "性别", :class => 'title' %>
+                <label class="title">性别<span class="user_rating_star">★★</span></label>
                 <select name="user[user_extra_attributes][gender]">
                   <% if resource.user_extra.gender == "male" %>
                       <option value="male">男</option>
@@ -31,78 +48,55 @@
               </div>
 
               <div class="field">
-                <label class="title">当前头像</label>
-                <% if @photo_url.blank? %>
-                    <%= image_tag('default.jpg') %>
-                <% else %>
-                    <a class="fancy_image" href="<%= @user.user_extra.avatar.url %>">
-                      <%= image_tag(@photo_url) %>
-                    </a>
-                <% end %>
+                <label class="title">城市<span class="user_rating_star">★★</span></label>
+                <%= extra.text_field :city, :title => "填写您当前所在的城市，方便同城的Ta发现您的活动" %>
               </div>
 
               <div class="field">
-                <label class="title">上传新头像</label>
-                <%= extra.file_field :avatar %>
+                <label class="title">学校/单位<span class="user_rating_star">★★★</span></label>
+                <%= extra.text_field :org, :title => '你可以填写多个学校或单位，如"清华大学/Duke Univ/Google"' %>
               </div>
 
               <div class="field">
-                <%= extra.label :city, "城市", :class => 'title' %>
-                <%= extra.text_field :city %>
+                <label class="title">院系/部门<span class="user_rating_star">★★★</span></label>
+                <%= extra.text_field :department, :title => '与上一条相应的，你也可以填写多个条目，如"计算机系/CS/Eng(Research Intern)"' %>
               </div>
 
-              <div class="field">
-                <%= extra.label :org, "学校/单位", :class => 'title' %>
-                <%= extra.text_field :org %>
-              </div>
-
-              <div class="field">
-                <%= extra.label :department, "院系/部门", :class => 'title' %>
-                <%= extra.text_field :department %>
-              </div>
-
-              <div class="field">
-                <%= extra.label :renren_url, "人人主页", :class=>"title" %>
-                <%= extra.text_field :renren_url, :class=>"textvalue" %>
-                <div class="field_help">
-                  <div class="stressed">怎样获得人人主页地址？</div>
-                  <div>
-                    <ul class="instruction_list">
-                      <li>登录<a href="http://www.renren.com" target="_blank">人人网</a></li>
-                      <li>登录后，点击页面上方的“个人主页”链接，从浏览器的地址栏中复制“个人主页”页面的地址。</li>
-                      <li>正确的地址类似于：http://www.renren.com/profile.do?id=356208904</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
             </fieldset>
 
-            <fieldset id="im_fields">
+            <fieldset id="contact_fields">
+              <legend><span>联系信息</span>：让大家联系到你</legend>
               <div class="field">
-                <%= extra.label :qq, "QQ号", :class => 'title' %>
+                <label class="title">人人主页&nbsp;+<%= image_tag "renren.png" %></label>
+                <%= extra.text_field :renren_url, :title => "登录人人后点击页面上方的“个人主页”链接，从浏览器的地址栏中复制“个人主页”页面的地址。正确的地址类似于：http://www.renren.com/profile.do?id=356208904" %>
+              </div>
+
+              <div class="field">
+                <label class="title">QQ号<span class="user_rating_star"><span class="blue_star">&nbsp;+★</span></span></label>
                 <%= extra.text_field :qq %>
               </div>
 
               <div class="field">
-                <%= extra.label :fetion, "飞信号", :class => 'title' %>
+                <label class="title">飞信号<span class="user_rating_star"><span class="blue_star">&nbsp;+★</span></span></label>
                 <%= extra.text_field :fetion %>
               </div>
 
               <div class="field">
-                <%= extra.label :msn, "MSN", :class => 'title' %>
+                <label class="title">MSN<span class="user_rating_star"><span class="blue_star">&nbsp;+★</span></span></label>
                 <%= extra.text_field :msn %>
               </div>
 
               <div class="field">
-                <%= extra.label :gtalk, "GTalk", :class => 'title' %>
+                <label class="title">GTalk<span class="user_rating_star"><span class="blue_star">&nbsp;+★</span></span></label>
                 <%= extra.text_field :gtalk %>
               </div>
             </fieldset>
 
             <fieldset id="id_emails">
+              <legend><span>身份验证</span>：证实你的身份</legend>
               <div class="field">
-                <label class="title">添加验证邮箱</label>
-                <input type="text" name="id_email" size="30"/>
+                <label class="title">新验证邮箱<span class="user_rating_star"><span class="red_star">&nbsp;+★</span></span></label>
+                <input type="text" name="id_email" size="30" title="填写完新邮箱后，请点击“提交”按钮，然后去相应的邮箱查收确认邮件，只有当邮件被确认后该邮箱才会出现在已验证邮箱中"/>
               </div>
 
               <div class="field">
@@ -127,6 +121,57 @@
 
     <% end %>
 <% end %>
+
+<div id="gold_tooltip" class="tooltip">
+  填写所有小于等于x个<span class="user_rating_star">★</span>的信息即可得到x枚<span class="user_rating_star">★</span>徽章。它们意味着您有更完善的基本个人资料，因此可以更容易的让大家搜索到您的活动，同时也意味着您的活动更有吸引力。
+</div>
+
+<div id="blue_tooltip" class="tooltip">
+  每填写一个<span class="user_rating_star"><span class="blue_star">+★</span></span>的信息即可增加一枚<span class="user_rating_star"><span class="blue_star">★</span></span>徽章。
+</div>
+
+<div id="red_tooltip" class="tooltip">
+  每增加一个已验证邮箱就会增加一枚<span class="user_rating_star"><span class="red_star">★</span></span>徽章。它们意味着您有更可靠的身份，比如拥有@mails.tsinghua.edu.cn的邮箱意味着你是清华的学生，拥有@duke.edu的邮箱意味着你是Duke Univ的一员，拥有@google.com的邮箱意味着你是Google的一员……。
+</div>
+
+<script type="text/javascript">
+    $("#user_edit :input[title]").tooltip({
+
+        // place tooltip on the right edge
+        position: "center right",
+
+        // a little tweaking of the position
+        offset: [-2, 10],
+
+        // use the built-in fadeIn/fadeOut effect
+        effect: "fade",
+
+        // custom opacity setting
+        opacity: 0.7
+
+    });
+
+    $('#user_edit .user_rating_star').tooltip({
+        tip: '#gold_tooltip',
+        position: "top left",
+        offset: [-20, -250],
+        effect: "fade"
+    });
+
+    $('#user_edit .user_rating_star .blue_star').tooltip({
+        tip: '#blue_tooltip',
+        position: "top left",
+        offset: [-20, -250],
+        effect: "fade"
+    });
+
+    $('#user_edit .user_rating_star .red_star').tooltip({
+        tip: '#red_tooltip',
+        position: "top left",
+        offset: [-20, -250],
+        effect: "fade"
+    });
+</script>
 
 <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => {:method => :put}) do |f| %>
     <%= content_box "修改", "密码", true do %>

@@ -12,12 +12,18 @@
   <%= stylesheet_link_tag "biz/reset", "biz/layout", "biz/style", :media=>"all" %>
   <link type="text/css" href="/stylesheets/ui-lightness/jquery-ui-1.8.13.custom.css" rel="Stylesheet"/>
 
+  <%= javascript_include_tag "jquery/jquery.tools.min.js" %>
+
   <!--override prototype-->
-  <%= javascript_include_tag "jquery.js" %>
   <%= javascript_include_tag "jquery-ui.js" %>
 
   <script type="text/javascript" src="/plugins/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
   <link rel="stylesheet" href="/plugins/fancybox/jquery.fancybox-1.3.4.css" type="text/css" media="screen"/>
+
+  <script type="text/javascript" src="/plugins/toastmessage/javascript/jquery.toastmessage.js"></script>
+  <link rel="stylesheet" href="/plugins/toastmessage/resources/css/jquery.toastmessage.css" type="text/css" media="screen"/>
+
+  <%= javascript_include_tag "jquery/bpopup.js" %>
 
   <script type="text/javascript">
 
@@ -114,10 +120,15 @@
             <section id="content">
               <div class="noticebar">
                 <% if alert %>
-                    <div id="alert"><%= alert %></div>
+                    <div id="alert"><a class="bClose">x</a><p><span>!&nbsp;&nbsp;</span><%= alert %></p></div>
+                    <script defer='defer' type="text/javascript">
+                      $('#alert').bPopup({position: [$('#content').position().top, 'auto']})
+                    </script>
                 <% end %>
                 <% if notice %>
-                    <div id="notice"><%= notice %></div>
+                    <script defer='defer' type="text/javascript">
+                      $().toastmessage('showSuccessToast', "<%= escape_javascript(notice) %>")
+                    </script>
                 <% end %>
               </div>
               <%= yield %>
@@ -192,6 +203,11 @@
 
 <script defer="defer" type="text/javascript">
     $('a.fancy_image').fancybox();
+</script>
+
+<!--avoid conflict with prototype-->
+<script defer='defer' type="text/javascript">
+  jQ = jQuery.noConflict();
 </script>
 
 </body>
