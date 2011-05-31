@@ -703,7 +703,7 @@ div.news_thread div.user_badge div.name, div#profile_header div.user_badge div.n
     display: none;
 }
 
-div#news #more{
+div#news #more_news, #more_recent_events{
     padding-left: 20px;
 }
 
@@ -719,6 +719,7 @@ div.user_badge div.user_rating_star img{
 }
 
 .user_rating_star {
+    cursor: pointer;
     color: #FFD030;
 }
 
@@ -846,13 +847,13 @@ div.event_header {
     background: url(../../images/biz/link1-bgd.gif) left top repeat-x;
 }
 
-div.attendees {
+div.attendees, div.recent_events {
     background: #F7F7F7;
     border: solid 1px #E8E8E8;
     padding: 10px 10px 20px 10px;
 }
 
-#attendees_h3 {
+#attendees_h3, #recent_events_h3 {
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     margin-bottom: 00px;

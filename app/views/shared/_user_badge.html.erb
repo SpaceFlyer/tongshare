@@ -14,7 +14,7 @@
             <%= image_tag 'renren.png', :size => "10x10" %>
         <% end %>
     <% end %>
-    <%= '★'*@gold_rating %> <span class="blue_star"><%= '★'*@blue_rating %></span> <span class="red_star"><%= '★'*@red_rating %></span>
+    <span class="gold_star"><%= '★'*@gold_rating %></span> <span class="blue_star"><%= '★'*@blue_rating %></span> <span class="red_star"><%= '★'*@red_rating %></span>
   </div>
   <div class="name" align="center">
     <%= link_to @friendly_name, "/profile/show?target_user=#{@user.id}" %>

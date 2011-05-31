@@ -30,12 +30,12 @@
             <fieldset id="basic_fields">
               <legend><span>基本信息</span>：让大家搜索到你</legend>
               <div class="field">
-                <label class="title">姓名<span class="user_rating_star">★</span></label>
+                <label class="title">姓名<span class="user_rating_star"><span class="gold_star">★</span></span></label>
                 <%= extra.text_field :name, :title => '请填写真实姓名，方便朋友找到你' %>
               </div>
 
               <div class="field">
-                <label class="title">性别<span class="user_rating_star">★★</span></label>
+                <label class="title">性别<span class="user_rating_star"><span class="gold_star">★★</span></span></label>
                 <select name="user[user_extra_attributes][gender]">
                   <% if resource.user_extra.gender == "male" %>
                       <option value="male">男</option>
@@ -48,17 +48,17 @@
               </div>
 
               <div class="field">
-                <label class="title">城市<span class="user_rating_star">★★</span></label>
+                <label class="title">城市<span class="user_rating_star"><spanc class="gold_star">★★</span></span></label>
                 <%= extra.text_field :city, :title => "填写您当前所在的城市，方便同城的Ta发现您的活动" %>
               </div>
 
               <div class="field">
-                <label class="title">学校/单位<span class="user_rating_star">★★★</span></label>
+                <label class="title">学校/单位<span class="user_rating_star"><span class="gold_star">★★★</span></span></label>
                 <%= extra.text_field :org, :title => '你可以填写多个学校或单位，如"清华大学/Duke Univ/Google"' %>
               </div>
 
               <div class="field">
-                <label class="title">院系/部门<span class="user_rating_star">★★★</span></label>
+                <label class="title">院系/部门<span class="user_rating_star"><span class="gold_star">★★★</span></span></label>
                 <%= extra.text_field :department, :title => '与上一条相应的，你也可以填写多个条目，如"计算机系/CS/Eng(Research Intern)"' %>
               </div>
 
@@ -131,7 +131,7 @@
 </div>
 
 <div id="red_tooltip" class="tooltip">
-  每增加一个已验证邮箱就会增加一枚<span class="user_rating_star"><span class="red_star">★</span></span>徽章。它们意味着您有更可靠的身份，比如拥有@mails.tsinghua.edu.cn的邮箱意味着你是清华的学生，拥有@duke.edu的邮箱意味着你是Duke Univ的一员，拥有@google.com的邮箱意味着你是Google的一员……。
+  每增加一个已验证邮箱就会增加一枚<span class="user_rating_star"><span class="red_star">★</span></span>徽章。它们意味着您有更可靠的身份，比如拥有@mails.tsinghua.edu.cn的邮箱意味着你是清华的学生，拥有@duke.edu的邮箱意味着你是Duke Univ的一员，拥有@google.com的邮箱意味着你是Google的一员……
 </div>
 
 <script type="text/javascript">
@@ -151,7 +151,7 @@
 
     });
 
-    $('#user_edit .user_rating_star').tooltip({
+    $('#user_edit .user_rating_star .gold_star').tooltip({
         tip: '#gold_tooltip',
         position: "top left",
         offset: [-20, -250],

@@ -28,11 +28,12 @@
   <script type="text/javascript">
 
       function set_news_max_height() {
-          $("#news").css("max-height", Math.min($('#content').position().top - $('#news').position().top + $('#content').height(), $(window).height() - $('#news').position().top-100) + "px")
+          jQuery("#news").css("max-height", Math.min(jQuery('#content').position().top -
+                  jQuery('#news').position().top + jQuery('#content').height(), jQuery(window).height() - jQuery('#news').position().top - 100) + "px")
       }
 
-      $(document).ready(set_news_max_height)
-      $(window).resize(set_news_max_height)
+      jQuery(document).ready(set_news_max_height)
+      jQuery(window).resize(set_news_max_height)
   </script>
 
 <%#= javascript_include_tag "biz/jquery-1.4.2.min" %>
@@ -120,14 +121,16 @@
             <section id="content">
               <div class="noticebar">
                 <% if alert %>
-                    <div id="alert"><a class="bClose">x</a><p><span>!&nbsp;&nbsp;</span><%= alert %></p></div>
+                    <div id="alert"><a class="bClose">x</a>
+
+                      <p><span>!&nbsp;&nbsp;</span><%= alert %></p></div>
                     <script defer='defer' type="text/javascript">
-                      $('#alert').bPopup({position: [$('#content').position().top, 'auto']})
+                        $('#alert').bPopup({position: [$('#content').position().top, 'auto']})
                     </script>
                 <% end %>
                 <% if notice %>
                     <script defer='defer' type="text/javascript">
-                      $().toastmessage('showSuccessToast', "<%= escape_javascript(notice) %>")
+                        $().toastmessage('showSuccessToast', "<%= escape_javascript(notice) %>")
                     </script>
                 <% end %>
               </div>
@@ -201,13 +204,50 @@
   </div>
 </div>
 
+<div id="badge_gold_tooltip" class="tooltip">
+  越多的<span class="user_rating_star">★</span>徽章意味着Ta有更完善的基本个人资料，更容易让大家搜索到T的活动，同时也意味着Ta的活动更有吸引力。
+</div>
+
+<div id="badge_blue_tooltip" class="tooltip">
+  越多的<span class="user_rating_star"><span class="blue_star">★</span></span>徽章意味着Ta有更完善的联系方式，方便大家联系到Ta。
+</div>
+
+<div id="badge_red_tooltip" class="tooltip">
+  越多的<span class="user_rating_star"><span class="red_star">★</span></span>徽章意味着Ta有更可靠的身份。这里身份是由邮箱来验证的，比如拥有@mails.tsinghua.edu.cn的邮箱意味着Ta是清华的学生，拥有@duke.edu的邮箱意味着Ta是Duke
+  Univ的一员，拥有@google.com的邮箱意味着Ta是Google的一员……
+</div>
+
 <script defer="defer" type="text/javascript">
-    $('a.fancy_image').fancybox();
+    function refresh_plugins() {
+        jQuery('a.fancy_image').fancybox();
+        jQuery('.user_badge .user_rating_star .gold_star').tooltip({
+            tip: '#badge_gold_tooltip',
+            position: "bottom center",
+//        offset: [-20, -250],
+            delay: 0
+        });
+
+        jQuery('.user_badge .user_rating_star .blue_star').tooltip({
+            tip: '#badge_blue_tooltip',
+            position: "bottom center",
+//        offset: [-20, -250],
+            delay: 0
+        });
+
+        jQuery('.user_badge .user_rating_star .red_star').tooltip({
+            tip: '#badge_red_tooltip',
+            position: "bottom center",
+//        offset: [-20, -250],
+            delay: 0
+        });
+    }
+
+    refresh_plugins();
 </script>
 
 <!--avoid conflict with prototype-->
 <script defer='defer' type="text/javascript">
-  jQ = jQuery.noConflict();
+    jQ = jQuery.noConflict();
 </script>
 
 </body>

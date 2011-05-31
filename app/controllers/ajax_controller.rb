@@ -8,4 +8,7 @@ class AjaxController < ApplicationController
   def load_news
   end
 
+  def load_recent_events
+  end
+
 end

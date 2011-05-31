@@ -311,4 +311,13 @@ HTML
     render :partial => 'shared/news'
   end
 
+  def load_recent_events(previous_id = nil, previous_time = nil)
+    if (previous_id && previous_time)
+      @recent_events = Event.all(:limit => 10, :order => 'end, begin DESC, id', :conditions => ["share_token=? AND end >= ? AND id > ?", Event::PUBLIC_TOKEN, previous_time, previous_id])
+    else
+      @recent_events = Event.all(:limit => 10, :order => 'end, begin DESC, id', :conditions => ["share_token=? AND end >= ?", Event::PUBLIC_TOKEN, Time.now.utc])
+    end
+    render :partial => 'shared/recent_events'
+  end
+
 end

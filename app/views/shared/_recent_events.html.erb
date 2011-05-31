@@ -1,0 +1,15 @@
+<% if @recent_events.count > 0 %>
+    <% for event in @recent_events %>
+        <%= instance_header(event.instances[0], false, false) %>
+    <% end %>
+    <div id="more_recent_events">
+      <% previous_id = @recent_events.last.id %>
+      <% previous_time = @recent_events.last.end %>
+      <% query_url = "/ajax/load_recent_events?previous_id=#{previous_id}&previous_time=#{URI.escape(previous_time.to_s)}" %>
+      <a class="button_link" onclick="jQuery('#more_recent_events').html('正在读取，请稍等...');jQuery.get('<%= query_url %>', function(data){jQuery('#more_recent_events').replaceWith(data);refresh_plugins();});refresh_plugins();">更多活动</a>
+    </div>
+<% else %>
+    <div id="more_recent_events">
+      没有更多的活动了
+    </div>
+<% end %>
