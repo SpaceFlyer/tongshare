@@ -2,6 +2,7 @@ Tongshare::Application.routes.draw do
 
   get "ajax/load_news"
   get "ajax/load_recent_events"
+  get "ajax/load_check_list"
 
   get "private/get_diff"
 

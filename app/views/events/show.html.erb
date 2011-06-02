@@ -1,8 +1,78 @@
 <%= javascript_include_tag "event.js" %>
+<%= javascript_include_tag "jquery/jquery.ajaxscroll.js" %>
+
 <%= content_box "" do %>
 
-    <%= instance_header(@event.instances[0], true, true) %>
+    <% if News.count(:conditions => ['target_event_id=? AND action=?', @event.id, News::ACTION_CHECK]) > 0 %>
 
+        <!-- "previous page" action -->
+        <a class="prev browse left"></a>
+
+        <!-- root element for scrollable -->
+        <div class="scrollable">
+
+          <!-- root element for the items -->
+          <div class="items">
+
+            <!-- 1-5 -->
+            <div id="pending_list">
+              <div class="check_list_box">
+                <img src="/images/loader.gif"/>
+              </div>
+              <div class="check_list_box">
+                <img src="/images/loader.gif"/>
+              </div>
+              <div class="check_list_box">
+                <img src="/images/loader.gif"/>
+              </div>
+              <div class="check_list_box">
+                <img src="/images/loader.gif"/>
+              </div>
+              <div class="check_list_box">
+                <img src="/images/loader.gif"/>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- "next page" action -->
+        <a class="next browse right"></a>
+
+        <script type="text/javascript">
+            $(function() {
+                // initialize scrollable
+                jQuery(".scrollable").scrollable();
+                var api = jQuery('.scrollable').data('scrollable')
+                load_check()
+                api.onSeek(try_load_check)
+            });
+
+            function load_check() {
+                var api = jQuery('.scrollable').data('scrollable')
+                var offset = 5 * (api.getItems().size() - 1);
+                jQ.get('<%= "/ajax/load_check_list?batchSize=5&event_id=#{@event.id}&start_from=#{News.last.id}&offset=" %>' + offset, function(data) {
+                    jQ('#pending_list').replaceWith(data);
+                    refresh_plugins();
+                });
+            }
+
+            function try_load_check() {
+                var api = jQuery('.scrollable').data('scrollable')
+                if (api.getSize() - 1 == api.getIndex()) {
+                    load_check();
+                }
+            }
+        </script>
+
+        <div class="clear_line">
+          <hr size="1px"/>
+        </div>
+        <!--<hr style="clear:both"/>-->
+    <% end %>
+
+    <%= instance_header(@event.instances[0], true, true) %>
 
     <% if !(attendees = get_attendees(@event, @attendee_offset, 10+1)).empty? %>
         <h3 id="attendees_h3">活动参与者</h3>

@@ -714,12 +714,23 @@ div.user_badge {
     margin-left: 10px;
 }
 
+div.user_badge div.avatar{
+    float: none;
+}
+
+div.user_badge div.user_rating_star{
+    float: none;
+}
+
+div.user_badge div.name{
+    float: none;
+}
+
 div.user_badge div.user_rating_star img{
     vertical-align:middle;
 }
 
 .user_rating_star {
-    cursor: pointer;
     color: #FFD030;
 }
 
@@ -851,6 +862,8 @@ div.attendees, div.recent_events {
     background: #F7F7F7;
     border: solid 1px #E8E8E8;
     padding: 10px 10px 20px 10px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 
 #attendees_h3, #recent_events_h3 {
@@ -926,4 +939,159 @@ a.bClose {
     color: #ff5811;
     font-size: 30px;
     font-weight:bold;
+}
+
+.ajaxscroll {
+    border: 1px solid #ddd;
+}
+
+.ajaxscroll table {
+    display: table;
+    border-collapse: separate;
+    border-spacing: 2px;
+    border-color: gray;
+}
+
+.ajaxscroll tbody {
+    display: table-row-group;
+    vertical-align: middle;
+    border-color: inherit;
+}
+
+.ajaxscroll tr {
+    display: table-row;
+    vertical-align: inherit;
+    border-color: inherit;
+}
+
+.ajaxscroll .batch {
+    margin: 0;
+    padding: 0;
+}
+
+.ajaxscroll .check_list_box {
+    display: inline-block;
+    border: 1px solid #eee;
+    width: 150px;
+    height: 150px;
+    text-align: center;
+    margin: 5px !important;
+    margin-bottom: 25px;
+}
+
+.ajaxscroll .empty .check_list_box {
+    border: 1px solid #ddd;
+    background: #FCFCFC url(../../images/loader.gif) no-repeat scroll center center;
+}
+
+#horizontal_check_list {
+    height: 150px;
+    width: 600px;
+}
+
+/*
+	root element for the scrollable.
+	when scrolling occurs this element stays still.
+*/
+.scrollable {
+	/* required settings */
+    float:left;
+	position:relative;
+	overflow:hidden;
+	width: 550px;
+	height:125px;
+    /*border:1px solid #ccc;*/
+    padding: 0px 0px 0px 0px;
+    margin-bottom: 0px;
+}
+
+/*
+	root element for scrollable items. Must be absolutely positioned
+	and it should have a extremely large width to accommodate scrollable items.
+	it's enough that you set width and height for the root element and
+	not for this element.
+*/
+.scrollable .items {
+	/* this cannot be too large */
+	width:20000em;
+	position:absolute;
+}
+
+/*
+	a single item. must be floated in horizontal scrolling.
+	typically, this element is the one that *you* will style
+	the most.
+*/
+.scrollable .items div {
+	float:left;
+}
+
+.scrollable .check_list_box {
+    width: 110px;
+    height:125px;
+    text-align:center;
+}
+
+.scrollable .check_list_box .user_badge {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.scrollable #no_more.check_list_box {
+    padding-top: 30px;
+}
+
+.scrollable #pending_list .check_list_box img{
+    padding-top: 40px;
+}
+
+.check_list_box .avatar img{
+    width: 80px;
+}
+
+/*.browse{*/
+    /*text-align:center;*/
+    /*width:30px;*/
+    /*height:140px;*/
+    /*float:left*/
+/*}*/
+
+/* prev, next, prevPage and nextPage buttons */
+a.browse {
+    background: url(../../images/scrollable/arrow/hori_large.png) no-repeat;
+    display: block;
+    width: 30px;
+    height: 30px;
+    float: left;
+    margin: 20px 10px;
+    cursor: pointer;
+    font-size: 1px;
+}
+
+/* right */
+a.right {
+    background-position: 0 -30px;
+    clear: right;
+    margin-right: 0px;
+}
+
+a.right:hover {
+    background-position: -30px -30px;
+}
+
+a.right:active {
+    background-position: -60px -30px;
+}
+
+/* left */
+a.left {
+    margin-left: 0px;
+}
+
+a.left:hover {
+    background-position: -30px 0;
+}
+
+a.left:active {
+    background-position: -60px 0;
 }

@@ -1,0 +1,32 @@
+<div>
+  <% for check in @checks %>
+      <div class="check_list_box" title="<%= "Ta于" + friendly_time_range(check.created_at)+ "查看了此活动" %>">
+        <%= user_badge check.user %>
+      </div>
+  <% end %>
+</div>
+
+<% if @checks.count >= @limit %>
+    <div id="pending_list">
+      <div class="check_list_box">
+        <img src="/images/loader.gif"/>
+      </div>
+      <div class="check_list_box">
+        <img src="/images/loader.gif"/>
+      </div>
+      <div class="check_list_box">
+        <img src="/images/loader.gif"/>
+      </div>
+      <div class="check_list_box">
+        <img src="/images/loader.gif"/>
+      </div>
+      <div class="check_list_box">
+        <img src="/images/loader.gif"/>
+      </div>
+    </div>
+<% else %>
+    <div class="check_list_box" id="no_more">
+      无更多的查看者了
+    </div>
+<% end %>
+
