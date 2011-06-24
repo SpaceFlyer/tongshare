@@ -51,5 +51,10 @@ Tongshare::Application.configure do
 
   SITE = "localhost:3000"
   THU_SPECIAL_SECRET = "I am special" # for special user registration (e.g. Association, Centenary)
+  
+  RENREN_APP_ID = "87fa4d13e57f4f99bec93b8711c8d1f5"
+  RENREN_APP_SECRET = "120026030b96459e9aecaf81975d58f9"
+  SSL_CA_PATH = "/etc/ssl/certs"
+  RENREN_REDIRECT_URI = 'http://' + SITE + "/app/renren/callback"
 end
 

@@ -1,17 +1,12 @@
 GIT
-  remote: git://github.com/abhishiv/portablecontacts.git
-  revision: 2703c2d9aa21a2d1d841f37d55ac842f17c86d03
-  specs:
-    portablecontacts (0.1.0)
-      json
-      oauth (>= 0.3.6)
-
-GIT
   remote: git://github.com/afeld/oauth-plugin.git
-  revision: a573ea1b5fb5be777bd500e3e39b5b815cb7b18b
+  revision: bd9f1a3242e2b02df752d915e75d7b6b7a843c2e
   specs:
-    oauth-plugin (0.4.0.pre4)
-      oauth (>= 0.4.4)
+    oauth-plugin (0.4.0.pre5)
+      multi_json
+      oauth (~> 0.4.4)
+      oauth2
+      rack
 
 GIT
   remote: http://github.com/paneq/calendar_date_select.git
@@ -50,6 +45,7 @@ GEM
       activemodel (= 3.0.3)
       activesupport (= 3.0.3)
     activesupport (3.0.3)
+    addressable (2.2.6)
     arel (2.0.8)
     bcrypt-ruby (2.1.4)
     builder (2.1.2)
@@ -63,19 +59,27 @@ GEM
     erubis (2.6.6)
       abstract (>= 1.0.0)
     exception_notification (2.4.0)
+    faraday (0.6.1)
+      addressable (~> 2.2.4)
+      multipart-post (~> 1.1.0)
+      rack (< 2, >= 1.1.0)
     htmlentities (4.2.4)
     i18n (0.5.0)
     i18n-js (1.0.0)
       i18n
-    json (1.5.1)
     mail (2.2.15)
       activesupport (>= 2.3.6)
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     mime-types (1.16)
+    multi_json (1.0.3)
+    multipart-post (1.1.2)
     mysql (2.8.1)
     oauth (0.4.4)
+    oauth2 (0.4.1)
+      faraday (~> 0.6.1)
+      multi_json (>= 0.0.5)
     paperclip (2.3.8)
       activerecord
       activesupport
@@ -126,9 +130,9 @@ DEPENDENCIES
   i18n-js
   mysql
   oauth-plugin!
+  oauth2 (>= 0.4.1)
   paperclip (~> 2.3)
   parseexcel
-  portablecontacts!
   rails (= 3.0.3)
   ruby-prof
   sqlite3-ruby

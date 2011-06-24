@@ -1,5 +1,8 @@
 Tongshare::Application.routes.draw do
 
+  get "app/renren/signin"
+  get "app/renren/callback"
+
   get "private/get_diff"
 
   match "thankful" => "thankful#index"
