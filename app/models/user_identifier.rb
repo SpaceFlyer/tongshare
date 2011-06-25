@@ -29,7 +29,9 @@ class UserIdentifier < ActiveRecord::Base
   def value_format_check
     case login_type
     when TYPE_EMPLOYEE_NO, TYPE_EMPLOYEE_NO_DUMMY
-      errors.add(:login_value, :employee_no_invalid) if login_value.match(/^#{company_domain(self.user)}\.[0-9]{10}$/).nil?   #目前只考虑清华. TODO: 工作证格式？
+      #TODO: check it separately
+      #errors.add(:login_value, :employee_no_invalid) if login_value.match(/^#{company_domain(self.user)}\.[0-9]{10}$/).nil?   #目前只考虑清华. TODO: 工作证格式？
+      errors.add(:login_value, :employee_no_invalid) if login_value.match(/^#{company_domain(self.user)}\.[0-9]*$/).nil?   #目前只考虑清华. TODO: 工作证格式？
     when TYPE_MOBILE
       errors.add(:login_value, :mobile_invalid) if login_value.match(/^1[0-9]{10}$/).nil?
     when TYPE_EMAIL

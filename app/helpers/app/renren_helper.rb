@@ -1,9 +1,9 @@
-require 'oauth2'
 require 'digest/md5'
 module App::RenrenHelper
   RENREN_SITE = 'https://graph.renren.com'
   RENREN_ACCESS_TOKEN_URL = '/oauth/token'
   API_URL = 'http://api.renren.com/restserver.do'
+  RENREN_FIX = 'renren.com'
   
   def api_call(access_token, method, params = {})
     params = params.merge({
